@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="RuntimeSandbox/RuntimeSandbox.vcxproj" Id="ce5bfeb4-1a81-45be-8612-fb4034f9b2ff" />
+  <Project Path="SoraEngine/SoraEngine.vcxproj" Id="8b8dd9d9-8d97-4a6b-99c7-d8cec38c3f25" />
+</Solution>
