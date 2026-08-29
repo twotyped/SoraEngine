@@ -7,6 +7,6 @@
 .vs/
 Binaries/
 Intermediates/
-Log/
+Logs/
 
 vcpkg_installed/
