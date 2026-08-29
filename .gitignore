@@ -1,8 +1,8 @@
-*.sln
-*.slnx
-*.vcxproj
-*.filters
-*.user
+.sln
+.slnx
+.vcxproj
+.filters
+.user
 
 .vs/
 Binaries/
