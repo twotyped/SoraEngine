@@ -1,5 +1,12 @@
+*.sln
+*.slnx
+*.vcxproj
+*.filters
+*.user
+
 .vs/
 Binaries/
 Intermediates/
+Log/
 
-*.user
+vcpkg_installed/

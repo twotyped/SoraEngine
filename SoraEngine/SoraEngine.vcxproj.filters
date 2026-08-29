@@ -1,36 +1,187 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Core\Application">
+      <UniqueIdentifier>{F1A4822F-DD9D-A181-06D0-8606F227818D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Core\Application\Private">
+      <UniqueIdentifier>{DB9CF072-C7C1-3FF3-F00C-2583DC903E11}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\Core\Core.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Application\Private\Application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <Filter Include="Core\Application\Public">
+      <UniqueIdentifier>{FF2EA6E4-6B66-EE7B-7470-529FE0261575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Input">
+      <UniqueIdentifier>{AD4E7BCD-9906-BD1A-020E-9676EEE4570B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Input\Public">
+      <UniqueIdentifier>{3B0D7F11-A723-7DA7-F09A-08C95CF04D2F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Logging">
+      <UniqueIdentifier>{C4E22202-B045-B2A6-59CB-EA5C450D7E29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Logging\Private">
+      <UniqueIdentifier>{AEFD0E8F-9A8C-9858-43AB-AC532F19A9FE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Logging\Public">
+      <UniqueIdentifier>{724142ED-DEA2-1FFB-6710-66ADD37056BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SECI">
+      <UniqueIdentifier>{81B2C215-ED1C-778C-365B-2832A20455E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SECI\EventLayer">
+      <UniqueIdentifier>{0F03F83B-FB91-8105-A4B0-9500901E92AB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SECI\EventLayer\Private">
+      <UniqueIdentifier>{F938797C-E5F3-6828-8EAB-E1727A45B3B8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SECI\EventLayer\Private\Events">
+      <UniqueIdentifier>{BDF26798-29AC-D242-B20B-ED1C1EC488B2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SECI\EventLayer\Public">
+      <UniqueIdentifier>{5DBF5C97-C9CC-8A7D-52B3-8668BEBF5634}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SECI\EventLayer\Public\Events">
+      <UniqueIdentifier>{A1E00FF5-8D1C-135F-F62E-2B56E289BB79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SECI\Layer">
+      <UniqueIdentifier>{0DCCD11A-7957-3FDF-8268-C2D3EE729BDF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SECI\Layer\Private">
+      <UniqueIdentifier>{F71F13F0-6357-5B87-6C61-BFAAD8178280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SECI\Layer\Public">
+      <UniqueIdentifier>{9BBEB6FF-87B8-DF51-7025-76625CBE45BE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Window">
+      <UniqueIdentifier>{5581319D-C136-AA92-4A2B-A469B6DFA096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Window\Private">
+      <UniqueIdentifier>{3F9D5720-ABFE-342E-346C-7BE0A0CC6BED}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Window\Private\Platforms">
+      <UniqueIdentifier>{463F8677-B257-6DA1-7B04-FD3AE7DB013B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Window\Private\Platforms\Windows">
+      <UniqueIdentifier>{80CF699D-EC93-688D-B5F9-9857217D04C3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Window\Public">
+      <UniqueIdentifier>{E3B23C3F-CF96-FD94-38F7-F7E724FAE716}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Window\Public\Platforms">
+      <UniqueIdentifier>{EAB1ED42-D66C-DDEE-7F24-56396BBE277F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Window\Public\Platforms\Windows">
+      <UniqueIdentifier>{24A6DBE9-108D-9DE1-B9DD-03FFA5A31648}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Application\Public\Application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Core\SoraEngineIncludes.h">
-      <Filter>Header Files</Filter>
+      <Filter>Core\Application\Public</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Application\Public\EntryPoint.h">
-      <Filter>Header Files</Filter>
+      <Filter>Core\Application\Public</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Core.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\CoreTypes.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Input\Public\KeyCodes.h">
+      <Filter>Core\Input\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Input\Public\MouseCodes.h">
+      <Filter>Core\Input\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Logging\Public\Log.h">
+      <Filter>Core\Logging\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\EventLayer\Public\Events\ApplicationEvent.h">
+      <Filter>Core\SECI\EventLayer\Public\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\EventLayer\Public\Events\KeyEvent.h">
+      <Filter>Core\SECI\EventLayer\Public\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\EventLayer\Public\Events\MouseEvent.h">
+      <Filter>Core\SECI\EventLayer\Public\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\EventLayer\Public\Events\WindowEvent.h">
+      <Filter>Core\SECI\EventLayer\Public\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\EventLayer\Public\SECIEvent.h">
+      <Filter>Core\SECI\EventLayer\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\EventLayer\Public\SECIEventArena.h">
+      <Filter>Core\SECI\EventLayer\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\EventLayer\Public\SECIEventBus.h">
+      <Filter>Core\SECI\EventLayer\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\EventLayer\Public\SECIEventHandler.h">
+      <Filter>Core\SECI\EventLayer\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\EventLayer\Public\SECIEventTranslator.h">
+      <Filter>Core\SECI\EventLayer\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\EventLayer\Public\SECIEventTypes.h">
+      <Filter>Core\SECI\EventLayer\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\Layer\Public\SECILayer.h">
+      <Filter>Core\SECI\Layer\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\SECI\Layer\Public\SECILayerStack.h">
+      <Filter>Core\SECI\Layer\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Window\Public\Platforms\Windows\WindowsWindow.h">
+      <Filter>Core\Window\Public\Platforms\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Window\Public\Window.h">
+      <Filter>Core\Window\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sora.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Core\Application\Private\Application.cpp">
+      <Filter>Core\Application\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Logging\Private\Log.cpp">
+      <Filter>Core\Logging\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SECI\EventLayer\Private\Events\ApplicationEvent.cpp">
+      <Filter>Core\SECI\EventLayer\Private\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SECI\EventLayer\Private\Events\KeyEvent.cpp">
+      <Filter>Core\SECI\EventLayer\Private\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SECI\EventLayer\Private\Events\MouseEvent.cpp">
+      <Filter>Core\SECI\EventLayer\Private\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SECI\EventLayer\Private\Events\WindowEvent.cpp">
+      <Filter>Core\SECI\EventLayer\Private\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SECI\EventLayer\Private\SECIEvent.cpp">
+      <Filter>Core\SECI\EventLayer\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SECI\EventLayer\Private\SECIEventArena.cpp">
+      <Filter>Core\SECI\EventLayer\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SECI\EventLayer\Private\SECIEventBus.cpp">
+      <Filter>Core\SECI\EventLayer\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SECI\EventLayer\Private\SECIEventHandler.cpp">
+      <Filter>Core\SECI\EventLayer\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SECI\Layer\Private\SECILayer.cpp">
+      <Filter>Core\SECI\Layer\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\SECI\Layer\Private\SECILayerStack.cpp">
+      <Filter>Core\SECI\Layer\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Window\Private\Platforms\Windows\WindowsWindow.cpp">
+      <Filter>Core\Window\Private\Platforms\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

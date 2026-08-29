@@ -1,27 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Layer">
+      <UniqueIdentifier>{6287950D-CE9B-BDBE-971D-611E03F1B9EF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Layer\Public">
+      <UniqueIdentifier>{50C87561-3C2B-0506-E5B0-3DBCD1F2D088}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Runtime">
+      <UniqueIdentifier>{4995DAC4-B574-5960-BE8C-E4362AEBBFC1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runtime\Application">
+      <UniqueIdentifier>{8C06398F-F867-169D-81D5-5C4FED354D5C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime\Application\Private">
+      <UniqueIdentifier>{7669D0D6-E276-FEBC-6B5D-FAA7D769CA73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime\Application\Public">
+      <UniqueIdentifier>{3A5421B9-2664-CD89-8F1D-32A87B4CBC22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Layer\Private">
+      <UniqueIdentifier>{db13a0f1-90c5-4c1d-8bbe-2f5b20b51d5e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Layer\Public\SandboxLayer.h">
+      <Filter>Layer\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Runtime\Application\Public\SandboxApplication.h">
+      <Filter>Runtime\Application\Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Runtime\Application\Private\SandboxApplication.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Runtime\Application\Private</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\Runtime\Application\Public\SandboxApplication.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClCompile Include="Source\Layer\Private\SandboxLayer.cpp">
+      <Filter>Layer\Private</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

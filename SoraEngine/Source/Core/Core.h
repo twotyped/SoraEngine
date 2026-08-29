@@ -33,3 +33,9 @@
 #else // Static build → No import/export needed
 	#define SORA_API
 #endif
+
+#if defined(_MSC_VER)
+	#pragma warning(disable: 4251)
+#endif
+
+#define SORA_NO_DISCARD [[nodiscard]]
