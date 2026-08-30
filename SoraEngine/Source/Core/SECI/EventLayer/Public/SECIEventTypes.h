@@ -59,8 +59,7 @@ namespace Sora::SECI
 	/**
      * @brief Bitmask categories allowing event handlers to filter unwanted events instantly.
      */
-    enum SECIEventCategory : uint32_t
-    {
+    enum SECIEventCategory : uint32_t {
         EventCategoryNone        = 0,
         EventCategoryApplication = (1 << 0), // 0x01
         EventCategoryInput       = (1 << 1), // 0x02
@@ -76,8 +75,7 @@ namespace Sora::SECI
     /**
      * @brief Priority levels governing execution order inside SECIEventBus.
      */
-    enum class SECIEventPriority : uint8_t
-    {
+    enum class SECIEventPriority : uint8_t {
         Lowest   = 0,
         Low      = 1,
         Normal   = 2,
@@ -86,14 +84,11 @@ namespace Sora::SECI
     };
 
     // Bitwise helper macros for SECIEventCategory bitmask checks
-    inline SECIEventCategory operator|(SECIEventCategory a, SECIEventCategory b)
-    {
+    inline SECIEventCategory operator|(SECIEventCategory a, SECIEventCategory b) {
         return static_cast<SECIEventCategory>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
     }
 
-    inline SECIEventCategory operator&(SECIEventCategory a, SECIEventCategory b)
-    {
+    inline SECIEventCategory operator&(SECIEventCategory a, SECIEventCategory b) {
         return static_cast<SECIEventCategory>(static_cast<uint32_t>(a) & static_cast<uint32_t>(b));
     }
-
 } // namespace Sora::SECI

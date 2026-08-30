@@ -8,6 +8,9 @@
 
 class SandboxApplication : public Sora::Application {
 public:
-	SandboxApplication();
-	~SandboxApplication() override;
+    SandboxApplication();
+    virtual ~SandboxApplication() override;
+
+protected:
+    virtual void OnRegisterSubsystems(Sora::SECI::SECISubsystemRegistry& InRegistry) override;
 };

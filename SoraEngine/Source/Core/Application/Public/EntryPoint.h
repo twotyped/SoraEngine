@@ -8,27 +8,34 @@
 
 extern Sora::Application* Sora::CreateApplication();
 
-int main(int argc, char** argv)
-{
-	// 1. Engine pre-initialization (logging, memory allocation, profilers, etc.)
-	Sora::Log::Initialize();
-	SORA_ENGINE_INFO("Logging initialized");
+int main(int argc, char** argv) {
+    // 1. Engine pre-initialization
+    Sora::Log::Initialize();
+    SORA_ENGINE_INFO("Logging initialized");
 
-	// 2. Instantiate the client applciation
-	auto app = Sora::CreateApplication();
-	SORA_ENGINE_INFO("Created client application.");
-	SORA_CLIENT_INFO("Application created.");
+    // 2. Instantiate the client application
+    auto app = Sora::CreateApplication();
+    SORA_ENGINE_INFO("Created client application.");
+    SORA_CLIENT_INFO("Application created.");
 
-	// 3. Start main loop
-	SORA_ENGINE_INFO("Started client application.");
-	SORA_CLIENT_INFO("Application started.");
-	app->Run();
+    // 3. Initialize subsystems & window
+    if (!app || !app->Initialize())
+    {
+        SORA_ENGINE_ERROR("Application failed to initialize!");
+        delete app;
+        return -1;
+    }
 
-	// 4. Clean up client and engine systems
-	SORA_ENGINE_INFO("Shutting down.");
-	delete app;
+    // 4. Start main loop
+    SORA_ENGINE_INFO("Started client application.");
+    SORA_CLIENT_INFO("Application started.");
+    app->Run();
 
-	return 0;
+    // 5. Clean up
+    SORA_ENGINE_INFO("Shutting down.");
+    delete app;
+
+    return 0;
 }
 
 #endif

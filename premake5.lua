@@ -5,87 +5,35 @@ premake.override(premake.vstudio.vc2010, "propertyGroup", function(base, cfg, se
     if section == "Globals" then
         premake.w("<VcpkgEnabled>true</VcpkgEnabled>")
         premake.w("<VcpkgEnableManifest>true</VcpkgEnableManifest>")
-		premake.w("<VcpkgApplocalDeps>true</VcpkgApplocalDeps>")
+        premake.w("<VcpkgApplocalDeps>true</VcpkgApplocalDeps>")
     end
 end)
 
 workspace "SoraEngine"
-	architecture "x86_64"
-	startproject "RuntimeSandbox"
+    architecture "x86_64"
+    startproject "RuntimeSandbox"
 
-	buildoptions { "/utf-8" }
+    buildoptions { "/utf-8" }
 
-	configurations
-	{
-		"Debug",
-		"Release",
-	}
+    configurations
+    {
+        "Debug",
+        "Release",
+    }
 
-	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+    outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "SoraEngine"
-	location "SoraEngine"
-	kind "SharedLib"
-	language "C++"
-	cppdialect "C++20"
-	staticruntime "off"
+    location "SoraEngine"
+    kind "SharedLib"
+    language "C++"
+    cppdialect "C++20"
+    staticruntime "off"
 
-	targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
-	objdir ("Intermediates/" .. outputdir .. "/%{prj.name}")
+    targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
+    objdir ("Intermediates/" .. outputdir .. "/%{prj.name}")
 
-	files
-	{
-		"%{prj.name}/Source/**.h",
-		"%{prj.name}/Source/**.cpp"
-	}
-
-	includedirs
-	{
-		"%{prj.name}/Source",
-		"vcpkg_installed/%{cfg.system}-%{cfg.architecture}/include"
-	}
-
-	defines
-	{
-		"SORA_DYNAMIC_LINK",
-		"SORA_BUILD_DLL"
-	}
-
-	filter "configurations:Debug"
-        defines "SORA_DEBUG"
-        runtime "Debug"
-        symbols "on"
-		postbuildcommands {
-			'{COPY} "%{wks.location}/vcpkg_installed/x64-windows/bin/fmt.dll" "$(OutDir)"',
-			'{COPY} "$(OutDir)/SoraEngine.dll" "%{wks.location}/Binaries/Debug-windows-x86_64/RuntimeSandbox'
-		}
-
-    filter "configurations:Release"
-        defines "SORA_RELEASE"
-        runtime "Release"
-        optimize "on"
-		postbuildcommands {
-			'{COPY} "%{wks.location}/vcpkg_installed/x64-windows/bin/fmt.dll" "$(OutDir)"'
-		}
-
-project "RuntimeSandbox"
-	location "RuntimeSandbox"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++20"
-	staticruntime "off"
-
-	debugdir "%{wks.location}"
-
-	targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
-	objdir ("Intermediates/" .. outputdir .. "/%{prj.name}")
-
-	vpaths 
-	{
-		["*"] = "Source/**"
-	}
-
-	files
+    files
     {
         "%{prj.name}/Source/**.h",
         "%{prj.name}/Source/**.cpp"
@@ -93,9 +41,54 @@ project "RuntimeSandbox"
 
     includedirs
     {
-		"%{prj.name}/Source",
-        "SoraEngine/Source",
-		"vcpkg_installed/x64-windows/include"
+        "%{wks.location}/%{prj.name}/Source",
+        "%{wks.location}/vcpkg_installed/x64-windows/include"
+    }
+
+    defines
+    {
+        "SORA_DYNAMIC_LINK",
+        "SORA_BUILD_DLL"
+    }
+
+    filter "configurations:Debug"
+        defines "SORA_DEBUG"
+        runtime "Debug"
+        symbols "on"
+
+    filter "configurations:Release"
+        defines "SORA_RELEASE"
+        runtime "Release"
+        optimize "on"
+
+project "RuntimeSandbox"
+    location "RuntimeSandbox"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++20"
+    staticruntime "off"
+
+    debugdir "%{wks.location}"
+
+    targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
+    objdir ("Intermediates/" .. outputdir .. "/%{prj.name}")
+
+    vpaths 
+    {
+        ["*"] = "Source/**"
+    }
+
+    files
+    {
+        "%{prj.name}/Source/**.h",
+        "%{prj.name}/Source/**.cpp"
+    }
+
+    includedirs
+    {
+        "%{wks.location}/%{prj.name}/Source",
+        "%{wks.location}/SoraEngine/Source",
+        "%{wks.location}/vcpkg_installed/x64-windows/include"
     }
 
     links
@@ -105,10 +98,15 @@ project "RuntimeSandbox"
 
     defines
     {
-		"SORA_DYNAMIC_LINK"
+        "SORA_DYNAMIC_LINK"
     }
 
-	filter "configurations:Debug"
+    postbuildcommands {
+        '{COPY} "%{wks.location}/Binaries/' .. outputdir .. '/SoraEngine/SoraEngine.dll" "$(TargetDir)"',
+        '{COPY} "%{wks.location}/vcpkg_installed/x64-windows/bin/fmt.dll" "$(TargetDir)"'
+    }
+
+    filter "configurations:Debug"
         defines "SORA_DEBUG"
         runtime "Debug"
         symbols "on"

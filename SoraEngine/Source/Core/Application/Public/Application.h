@@ -3,34 +3,46 @@
 #include "Core/Core.h"
 #include "Core/Window/Public/Window.h"
 #include "Core/SECI/EventLayer/Public/SECIEvent.h"
+#include "Core/SECI/EventLayer/Public/SECIEventBus.h"
 #include "Core/SECI/EventLayer/Public/Events/WindowEvent.h"
-#include "Core/SECI/Layer/Public/SECILayer.h"
-#include "Core/SECI/Layer/Public/SECILayerStack.h"
+#include "Core/SECI/Subsystem/Public/SECISubsystemRegistry.h"
+#include "Core/Application/ApplicationSubsystem.h"
+#include "Core/Window/WindowSubsystem.h"
 
 #include <memory>
 
 namespace Sora
 {
-	class SORA_API Application
-	{
+	class SORA_API Application {
 	public:
 		Application();
-		virtual ~Application();
+		virtual ~Application() = default;
 
-		void Run();
-		void OnEvent(SECI::SECIEvent& InEvent);
+		Application(const Application&) = delete;
+        Application& operator=(const Application&) = delete;
 
-		void PushLayer(SECI::SECILayer* InLayer);
-		void PushOverlay(SECI::SECILayer* InOverlay);
+		/**
+         * @brief Bootstraps core engine subsystems and calls client subsystem registration.
+         */
+        bool Initialize();
 
-	private:
-		bool OnWindowClose(SECI::WindowCloseEvent& InEvent);
-        bool OnWindowResize(SECI::WindowResizeEvent& InEvent);
+        /**
+         * @brief Executes the primary engine loop.
+         */
+        void Run();
 
-	private:
-        std::unique_ptr<Window> AppWindow;
-		SECI::SECILayerStack AppLayerStack;
-        bool IsRunning = true;
+	protected:
+        /**
+         * @brief Override in Sandbox or Editor to register client-specific subsystems.
+         */
+		virtual void OnRegisterSubsystems(SECI::SECISubsystemRegistry& InRegistry) {}
+
+    protected:
+        std::unique_ptr<SECI::SECIEventBus> EventBus;
+        SECI::SECISubsystemRegistry Registry;
+
+        std::shared_ptr<ApplicationSubsystem> AppSubsystem;
+        std::shared_ptr<WindowSubsystem> WinSubsystem;
 	};
 
 	Application* CreateApplication();

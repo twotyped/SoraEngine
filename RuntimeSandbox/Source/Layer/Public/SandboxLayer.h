@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/SECI/Layer/Public/SECILayer.h"
 #include "Core/SECI/EventLayer/Public/SECIEvent.h"
 #include "Core/SECI/EventLayer/Public/Events/KeyEvent.h"
 #include "Core/SECI/EventLayer/Public/Events/MouseEvent.h"

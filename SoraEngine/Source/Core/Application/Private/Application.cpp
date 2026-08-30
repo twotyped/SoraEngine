@@ -1,68 +1,36 @@
 #include "Core/Application/Public/Application.h"
 #include "Core/Logging/Public/Log.h"
 #include "Core/SECI/EventLayer/Public/SECIEventHandler.h"
+#include "Core/Window/WindowSubsystem.h"
 
 namespace Sora
 {
 
-	Application::Application() {
-		AppWindow = Window::Create(WindowProperties("Sora: Sandbox", 1280, 720));
-		
-		AppWindow->SetEventCallback([this](SECI::SECIEvent& InEvent) {
-			OnEvent(InEvent);
-		});
-	}
+	Application::Application()
+        : EventBus(std::make_unique<SECI::SECIEventBus>()),
+          Registry(EventBus.get()) {}
 
-	Application::~Application() {}
+    bool Application::Initialize() {
+        // 1. Register Core Engine Subsystems
+        AppSubsystem = Registry.RegisterSubsystem<ApplicationSubsystem>(EventBus.get());
+        WinSubsystem = Registry.RegisterSubsystem<WindowSubsystem>(EventBus.get(), WindowProperties("SoraEngine: RuntimeSandbox", 1280, 720));
 
-	void Application::PushLayer(SECI::SECILayer* InLayer) {
-		AppLayerStack.PushLayer(InLayer);
-	}
+        // 2. Allow Sandbox / Editor to hook in custom subsystems (e.g., ImGuiSubsystem, EditorSubsystem, GameplaySubsystem)
+        OnRegisterSubsystems(Registry);
 
-	void Application::PushOverlay(SECI::SECILayer* InOverlay) {
-		AppLayerStack.PushOverlay(InOverlay);
-	}
+        // 3. Initialize all systems in priority order
+        return Registry.InitializeAll();
+    }
 
-	void Application::OnEvent(SECI::SECIEvent& InEvent) {
-		SORA_ENGINE_TRACE("{0}", InEvent.ToString());
+    void Application::Run() {
+        float deltaTime = 0.01f; // Placeholder delta calculation
 
-		SECI::SECIEventHandler dispatcher(InEvent);
-
-        dispatcher.Dispatch<SECI::WindowCloseEvent>([this](SECI::WindowCloseEvent& e) {
-            return OnWindowClose(e);
-        });
-
-        dispatcher.Dispatch<SECI::WindowResizeEvent>([this](SECI::WindowResizeEvent& e) {
-            return OnWindowResize(e);
-        });
-
-		for (auto it = AppLayerStack.rbegin(); it != AppLayerStack.rend(); ++it)
-        {
-            if (InEvent.Handled)
-            {
-                break;
-            }
-            (*it)->OnEvent(InEvent);
+        while (AppSubsystem && AppSubsystem->IsApplicationRunning()) {
+            Registry.UpdateAll(deltaTime);
+            EventBus->DispatchQueued();
         }
-	}
 
-	bool Application::OnWindowClose(SECI::WindowCloseEvent& InEvent) {
-        IsRunning = false;
-        return true;
+        Registry.ShutdownAll();
     }
-
-    bool Application::OnWindowResize(SECI::WindowResizeEvent& InEvent) {
-        SORA_ENGINE_INFO("Resizing graphics viewport to {0}x{1}", InEvent.GetWidth(), InEvent.GetHeight());
-        return true;
-    }
-
-	void Application::Run() {
-		while (IsRunning) {
-			for (SECI::SECILayer* Layer : AppLayerStack) {
-				Layer->OnUpdate();
-			}
-			AppWindow->OnUpdate();
-		}
-	}
 
 } // namespace Sora
