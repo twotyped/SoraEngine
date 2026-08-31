@@ -1,0 +1,51 @@
+#pragma once
+
+#include "RHITypes.h"
+#include <memory>
+#include <initializer_list>
+
+namespace Sora::RHI
+{
+
+    class RHIBuffer;
+    class RHITexture;
+
+    enum class RHITextureLayout {
+        Undefined,
+        General,
+        ColorAttachment,
+        DepthStencilAttachment,
+        ShaderReadOnly,
+        TransferSrc,
+        TransferDst,
+        Present
+    };
+
+    struct RHITextureBarrier {
+        std::shared_ptr<RHITexture> Texture;
+        RHITextureLayout OldLayout;
+        RHITextureLayout NewLayout;
+    };
+
+    class SORA_API RHICommandList {
+    public:
+        virtual ~RHICommandList() = default;
+
+        virtual void Begin() = 0;
+        virtual void End() = 0;
+
+        virtual void SetViewport(const RHIViewport& viewport) = 0;
+        virtual void SetScissor(const RHIRect2D& scissor) = 0;
+
+        virtual void PipelineBarrier(std::initializer_list<RHITextureBarrier> textureBarriers) = 0;
+
+        virtual void ClearColorTexture(std::shared_ptr<RHITexture> texture, float r, float g, float b, float a) = 0;
+        virtual void ClearDepthTexture(std::shared_ptr<RHITexture> texture, float depth, uint32_t stencil) = 0;
+
+        virtual void BindVertexBuffer(std::shared_ptr<RHIBuffer> buffer, uint64_t offset = 0) = 0;
+        virtual void BindIndexBuffer(std::shared_ptr<RHIBuffer> buffer, uint64_t offset = 0) = 0;
+        virtual void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t firstVertex = 0, uint32_t firstInstance = 0) = 0;
+        virtual void DrawIndexed(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t firstIndex = 0, int32_t vertexOffset = 0, uint32_t firstInstance = 0) = 0;
+    };
+
+} // namespace Sora::RHI

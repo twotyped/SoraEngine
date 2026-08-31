@@ -68,9 +68,6 @@ namespace Sora
 
 		virtual SECI::SECIEventCategory GetSubscribedEventCategories() const override {
 			return	SECI::EventCategoryInput |
-					SECI::EventCategoryKeyboard |
-					SECI::EventCategoryMouse |
-					SECI::EventCategoryMouseButton |
 					SECI::EventCategoryWindow;
         }
 
