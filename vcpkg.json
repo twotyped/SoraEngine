@@ -2,7 +2,13 @@
   "name": "sora-engine",
   "version-string": "0.1.0d",
   "dependencies": [
-    "spdlog"
+    "spdlog",
+    "vulkan-headers",
+    "vulkan-loader",
+    "vk-bootstrap",
+    "vulkan-memory-allocator",
+    "glm",
+    "shader-slang"
   ],
-  "builtin-baseline": "ddd0023b0eee70986e42ed49d9d4afb8098f212e"
+  "builtin-baseline": "ae64f2bfb9e558a751014380e826710d9b4fd731"
 }
