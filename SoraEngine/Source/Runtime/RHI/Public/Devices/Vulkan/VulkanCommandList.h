@@ -2,6 +2,8 @@
 
 #include "Runtime/RHI/Public/RHICommandList.h"
 #include <vulkan/vulkan.h>
+#include <initializer_list>
+#include <memory>
 
 namespace Sora::RHI
 {
@@ -13,6 +15,10 @@ namespace Sora::RHI
 
 		virtual void Begin() override;
 		virtual void End() override;
+
+		// Dynamic Rendering (Vulkan 1.3+)
+		void BeginRendering(std::shared_ptr<RHITexture> InColorTexture, float InR = 0.0f, float InG = 0.0f, float InB = 0.0f, float InA = 1.0f);
+		void EndRendering();
 
 		virtual void SetViewport(const RHIViewport& InViewport) override;
 		virtual void SetScissor(const RHIRect2D& InScissor) override;

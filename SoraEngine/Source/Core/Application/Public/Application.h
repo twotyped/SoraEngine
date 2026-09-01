@@ -7,6 +7,7 @@
 #include "Core/SECI/EventLayer/Public/Events/WindowEvent.h"
 #include "Core/SECI/Subsystem/Public/SECISubsystemRegistry.h"
 #include "Core/Application/ApplicationSubsystem.h"
+#include "Runtime/RHI/RHISubsystem.h"
 #include "Core/Window/WindowSubsystem.h"
 
 #include <memory>
@@ -43,6 +44,8 @@ namespace Sora
 
         std::shared_ptr<ApplicationSubsystem> AppSubsystem;
         std::shared_ptr<WindowSubsystem> WinSubsystem;
+        std::shared_ptr<RHISubsystem> RhiSubsystem;
+
 	};
 
 	Application* CreateApplication();

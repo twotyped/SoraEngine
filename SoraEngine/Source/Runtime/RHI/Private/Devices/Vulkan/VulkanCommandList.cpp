@@ -29,6 +29,33 @@ namespace Sora::RHI
 		vkEndCommandBuffer(CommandBuffer);
 	}
 
+	void VulkanCommandList::BeginRendering(std::shared_ptr<RHITexture> InColorTexture, float InR, float InG, float InB, float InA) {
+		auto VkTex = std::dynamic_pointer_cast<VulkanTexture>(InColorTexture);
+		if (!VkTex) {
+			SORA_ENGINE_ERROR("BeginRendering failed: InColorTexture is invalid!");
+			return;
+		}
+
+		VkRenderingAttachmentInfo ColorAttachment{ VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO };
+		ColorAttachment.imageView = VkTex->GetVkImageView();
+		ColorAttachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		ColorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		ColorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		ColorAttachment.clearValue.color = { { InR, InG, InB, InA } };
+
+		VkRenderingInfo RenderingInfo{ VK_STRUCTURE_TYPE_RENDERING_INFO };
+		RenderingInfo.renderArea = { {0, 0}, {VkTex->GetWidth(), VkTex->GetHeight()} };
+		RenderingInfo.layerCount = 1;
+		RenderingInfo.colorAttachmentCount = 1;
+		RenderingInfo.pColorAttachments = &ColorAttachment;
+
+		vkCmdBeginRendering(CommandBuffer, &RenderingInfo);
+	}
+
+	void VulkanCommandList::EndRendering() {
+		vkCmdEndRendering(CommandBuffer);
+	}
+
 	void VulkanCommandList::SetViewport(const RHIViewport& InViewport) {
 		VkViewport Viewport{};
 		Viewport.x = InViewport.X;
@@ -63,14 +90,14 @@ namespace Sora::RHI
 			ImageBarrier.dstStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT;
 			ImageBarrier.dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT | VK_ACCESS_2_MEMORY_WRITE_BIT;
 			
-			// Translate layouts
 			ImageBarrier.oldLayout = VkTex->GetCurrentLayout();
-			// Convert RHITextureLayout to VkImageLayout here...
 			ImageBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL; 
 			
 			ImageBarrier.image = VkTex->GetVkImage();
 			ImageBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			ImageBarrier.subresourceRange.baseMipLevel = 0;
 			ImageBarrier.subresourceRange.levelCount = 1;
+			ImageBarrier.subresourceRange.baseArrayLayer = 0;
 			ImageBarrier.subresourceRange.layerCount = 1;
 
 			VkTex->SetCurrentLayout(ImageBarrier.newLayout);
@@ -104,7 +131,6 @@ namespace Sora::RHI
 		Range.baseArrayLayer = 0;
 		Range.layerCount = VkTex->GetDesc().ArrayLayers;
 
-		// Requires the image to be in VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL or VK_IMAGE_LAYOUT_GENERAL
 		vkCmdClearColorImage(CommandBuffer, VkTex->GetVkImage(), VkTex->GetCurrentLayout(), &ClearValue, 1, &Range);
 	}
 
@@ -129,7 +155,6 @@ namespace Sora::RHI
 		Range.baseArrayLayer = 0;
 		Range.layerCount = VkTex->GetDesc().ArrayLayers;
 
-		// Requires the image to be in VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL or VK_IMAGE_LAYOUT_GENERAL
 		vkCmdClearDepthStencilImage(CommandBuffer, VkTex->GetVkImage(), VkTex->GetCurrentLayout(), &ClearValue, 1, &Range);
 	}
 
@@ -143,7 +168,6 @@ namespace Sora::RHI
 
 	void VulkanCommandList::BindIndexBuffer(std::shared_ptr<RHIBuffer> InBuffer, uint64_t InOffset) {
 		if (auto VkBuf = std::dynamic_pointer_cast<VulkanBuffer>(InBuffer)) {
-			// Assumes 32-bit uint indices by default
 			vkCmdBindIndexBuffer(CommandBuffer, VkBuf->GetVkBuffer(), static_cast<VkDeviceSize>(InOffset), VK_INDEX_TYPE_UINT32);
 		}
 	}

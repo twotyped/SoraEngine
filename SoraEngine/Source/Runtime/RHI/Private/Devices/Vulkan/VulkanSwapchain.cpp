@@ -49,6 +49,12 @@ namespace Sora::RHI
 			return;
 		}
 
+		// Store VkbSwapchain first so vectors are populated properly
+		VkbSwapchain = SwapchainResult.value();
+		Swapchain = VkbSwapchain.swapchain;
+		SwapchainImages = VkbSwapchain.get_images().value();
+		SwapchainImageViews = VkbSwapchain.get_image_views().value();
+
 		SwapchainTextures.clear();
 		for (size_t Index = 0; Index < SwapchainImages.size(); ++Index) {
 			RHITextureDesc BackBufferDesc{};
@@ -64,11 +70,6 @@ namespace Sora::RHI
 				BackBufferDesc
 			));
 		}
-
-		VkbSwapchain = SwapchainResult.value();
-		Swapchain = VkbSwapchain.swapchain;
-		SwapchainImages = VkbSwapchain.get_images().value();
-		SwapchainImageViews = VkbSwapchain.get_image_views().value();
 
 		Desc.Width = InWidth;
 		Desc.Height = InHeight;
@@ -95,7 +96,7 @@ namespace Sora::RHI
 		return AcquireResult == VK_SUCCESS || AcquireResult == VK_SUBOPTIMAL_KHR;
 	}
 
-	bool VulkanSwapchain::Present() {
+	bool VulkanSwapchain::Present(VkQueue InPresentQueue) {
 		VkPresentInfoKHR PresentInfo{ VK_STRUCTURE_TYPE_PRESENT_INFO_KHR };
 		PresentInfo.waitSemaphoreCount = 1;
 		PresentInfo.pWaitSemaphores = &RenderFinishedSemaphores[CurrentFrameIndex];
@@ -103,11 +104,7 @@ namespace Sora::RHI
 		PresentInfo.pSwapchains = &Swapchain;
 		PresentInfo.pImageIndices = &CurrentImageIndex;
 
-		// Queue submission takes place before present; placeholder assuming graphics/present queue
-		VkQueue PresentQueue = VK_NULL_HANDLE; 
-		vkGetDeviceQueue(LogicalDevice, 0, 0, &PresentQueue); // Adjust queue handle retrieval as needed
-
-		VkResult PresentResult = vkQueuePresentKHR(PresentQueue, &PresentInfo);
+		VkResult PresentResult = vkQueuePresentKHR(InPresentQueue, &PresentInfo);
 
 		CurrentFrameIndex = (CurrentFrameIndex + 1) % MaxFramesInFlight;
 

@@ -15,7 +15,11 @@ namespace Sora::RHI
 		virtual ~VulkanSwapchain() override;
 
 		virtual bool AcquireNextImage() override;
-		virtual bool Present() override;
+		
+		// Updated to accept explicit queue handle
+		bool Present(VkQueue InPresentQueue);
+		virtual bool Present() override { return Present(VK_NULL_HANDLE); } // Retain interface fallback if needed
+
 		virtual void Resize(uint32_t InWidth, uint32_t InHeight) override;
 
 		virtual std::shared_ptr<RHITexture> GetCurrentBackBuffer() const override;
