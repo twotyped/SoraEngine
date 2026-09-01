@@ -1,4 +1,5 @@
 #include "Core/SECI/Subsystem/Public/SECISubsystemRegistry.h"
+#include "Core/Logging/Public/Log.h"
 
 namespace Sora::SECI
 {
@@ -14,10 +15,27 @@ namespace Sora::SECI
 			RegisteredSubsystems.end());
 	}
 
+	bool SECISubsystemRegistry::InitializeSubsystem(SECISubsystem* InSubsystem) {
+		if (!InSubsystem) return false;
+		if (InSubsystem->IsInitialized()) {
+			SORA_ENGINE_WARN("Subsystem '{0}' is already initialized.", InSubsystem->GetName());
+			return true;
+		}
+
+		InSubsystem->SetInitialized(true);
+
+		if (!InSubsystem->OnInitialize()) {
+			InSubsystem->SetInitialized(false);
+			return false;
+		}
+
+		return true;
+	}
+
 	bool SECISubsystemRegistry::InitializeAll() {
 		for (auto& System : RegisteredSubsystems) {
-			if (System->IsInitialized()) continue;
-			if (!System->OnInitialize()) {
+			if (!System || System->IsInitialized()) continue;
+			if (!InitializeSubsystem(System.get())) {
 				return false;
 			}
 		}
@@ -37,14 +55,20 @@ namespace Sora::SECI
 		}
 	}
 
+	void SECISubsystemRegistry::ShutdownSubsystem(SECISubsystem* InSubsystem) {
+		if (!InSubsystem) return;
+		if (InSubsystem->IsInitialized()) {
+			InSubsystem->OnShutdown();
+			InSubsystem->SetInitialized(false);
+		} else {
+			SORA_ENGINE_WARN("Subsystem '{0}' is not initialized or has already been shutdown.", InSubsystem->GetName());
+		}
+		UnregisterSubsystem(InSubsystem);
+	}
 
 	void SECISubsystemRegistry::ShutdownAll() {
 		for (auto It = RegisteredSubsystems.rbegin(); It != RegisteredSubsystems.rend(); ++It) {
-			auto& System = *It;
-			if (System->IsInitialized()) {
-				System->OnShutdown();
-				System->SetInitialized(false);
-			}
+			ShutdownSubsystem(It->get());
 		}
 	}
 

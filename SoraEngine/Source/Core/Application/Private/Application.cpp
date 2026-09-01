@@ -17,7 +17,7 @@ namespace Sora
 		WinSubsystem = Registry.RegisterSubsystem<WindowSubsystem>(EventBus.get(), WindowProperties("SoraEngine: RuntimeSandbox", 1280, 720));
 
 		// Initialize WindowSubsystem specifically so HWND is created on OS level
-		if (WinSubsystem && !WinSubsystem->OnInitialize()) {
+		if (WinSubsystem && !Registry.InitializeSubsystem(WinSubsystem.get())) {
 			SORA_ENGINE_ERROR("Failed to initialize WindowSubsystem!");
 			return false;
 		}

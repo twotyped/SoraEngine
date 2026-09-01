@@ -36,11 +36,6 @@ namespace Sora
 		}
 
 		virtual bool OnInitialize() override {
-			if (IsInitialized()) {
-				SORA_ENGINE_WARN("RHISubsystem is already initialized.");
-				return true;
-			}
-
 			if (!Device) {
 				SORA_ENGINE_ERROR("RHISubsystem failed to initialize: No RHIDevice set! You must set an RHIDevice.");
 				return false;
@@ -51,7 +46,6 @@ namespace Sora
 				return false;
 			}
 
-			SetInitialized(true);
 			return Device->Initialize(NativeWindowHandle);
 		}
 
@@ -78,15 +72,10 @@ namespace Sora
 		}
 
 		virtual void OnShutdown() override {
-			if (!IsInitialized()) {
-				SORA_ENGINE_WARN("RHISubsystem is not initialized or already shut down.");
-				return;
-			}
 			if (Device) {
 				Device->WaitIdle();
 				Device->Shutdown();
 			}
-			SetInitialized(false);
         }
 
 		virtual std::string GetName() const override { return "RHISubsystem"; }

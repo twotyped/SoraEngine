@@ -19,10 +19,10 @@ namespace Sora
 		virtual ~WindowSubsystem() override = default;
 		
 		virtual bool OnInitialize() override {
-			if (IsInitialized()) {
-				SORA_ENGINE_WARN("WindowSubsystem is already initialized.");
-				return true;
-			}
+			//if (IsInitialized()) {
+			//	SORA_ENGINE_WARN("WindowSubsystem is already initialized. Continuing.");
+			//	return true;
+			//}
 			NativeWindow = Window::Create(Properties);
 			if (!NativeWindow) {
                 SORA_ENGINE_ERROR("Failed to initialize Native Window inside WindowSubsystem!");
@@ -34,7 +34,6 @@ namespace Sora
 			});
 
 			SORA_ENGINE_INFO("WindowSubsystem initialized successfully.");
-			SetInitialized(true);
 			return true;
 		}
 
@@ -43,13 +42,8 @@ namespace Sora
 		}
 
 		virtual void OnShutdown() override {
-			if (!IsInitialized()) {
-				SORA_ENGINE_WARN("WindowSubsystem is not initialized or already shut down.");
-				return;
-			}
 			NativeWindow.reset();
 			SORA_ENGINE_INFO("WindowSubsystem shut down.");
-			SetInitialized(false);
 		}
 
 		virtual void OnEvent(SECI::SECIEvent& InEvent) override {

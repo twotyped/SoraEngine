@@ -77,6 +77,13 @@ namespace Sora::SECI
 		 */
         void UnregisterSubsystem(SECISubsystem* InSubsystem);
 
+		/**
+		 * @brief Safely initializes a single registered subsystem if it hasn't been initialized yet.
+		 * @param InSubsystem Pointer to the target subsystem.
+		 * @return true if initialization succeeded (or was already initialized), false on failure.
+		 */
+		bool InitializeSubsystem(SECISubsystem* InSubsystem);
+
         /**
          * @brief Calls OnInitialize() on all registered subsystems in order of priority.
          * @return true if all subsystems initialized successfully, false otherwise.
@@ -91,6 +98,12 @@ namespace Sora::SECI
          * @brief Direct broadcast fallback if bypassing EventBus to send a raw SECIEvent to all systems.
          */
 		void RouteEventAll(SECIEvent& InEvent);
+
+		/**
+		 * @brief Gracefully shuts down a specific registered subsystem.
+		 * @param InSubsystem Pointer to the subsystem instance to shut down.
+		 */
+		void ShutdownSubsystem(SECISubsystem* InSubsystem);
 
         /**
          * @brief Unsubscribes and gracefully shuts down all registered subsystems in reverse priority order.
