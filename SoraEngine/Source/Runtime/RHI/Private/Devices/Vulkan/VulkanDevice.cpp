@@ -173,7 +173,7 @@ namespace Sora::RHI
 			LogicalDevice = VK_NULL_HANDLE;
 		}
 
-		// 5. Destroy Window Surface before Instance
+		// 5. Det ststroy Window Surface before Instance
 		if (Surface != VK_NULL_HANDLE) {
 			vkDestroySurfaceKHR(Instance, Surface, nullptr);
 			Surface = VK_NULL_HANDLE;
