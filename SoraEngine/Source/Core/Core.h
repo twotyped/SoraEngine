@@ -5,10 +5,12 @@
 
 #pragma once
 
+#ifndef SORA_PLATFORM_WINDOWS
 #if defined(_WIN32) || defined(_WIN64)
 #define SORA_PLATFORM_WINDOWS 1
 #else
 #define SORA_PLATFORM_WINDOWS 0
+#endif
 #endif
 
 #if SORA_PLATFORM_WINDOWS
