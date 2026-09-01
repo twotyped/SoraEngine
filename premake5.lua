@@ -48,7 +48,8 @@ project "SoraEngine"
     defines
     {
         "SORA_DYNAMIC_LINK",
-        "SORA_BUILD_DLL"
+        "SORA_BUILD_DLL",
+        "SORA_PLATFORM_WINDOWS"
     }
 
     filter "configurations:Debug"
@@ -98,7 +99,8 @@ project "RuntimeSandbox"
 
     defines
     {
-        "SORA_DYNAMIC_LINK"
+        "SORA_DYNAMIC_LINK",
+        "SORA_PLATFORM_WINDOWS"
     }
 
     postbuildcommands {
