@@ -2,6 +2,7 @@
 
 #include "RHITypes.h"
 #include <memory>
+#include <string>
 
 namespace Sora::RHI
 {
@@ -35,5 +36,12 @@ namespace Sora::RHI
 		virtual void BeginFrame() = 0;
         virtual void EndFrame() = 0;
         virtual void WaitIdle() = 0;
+
+        std::shared_ptr<RHISwapchain> GetSwapchain() const { return Swapchain; }
+		std::shared_ptr<RHICommandList> GetMainCommandList() const { return MainCommandList; }
+
+    protected:
+        std::shared_ptr<RHISwapchain> Swapchain{ nullptr };
+        std::shared_ptr<RHICommandList> MainCommandList{ nullptr };
     };
 } // namespace Sora::RHI

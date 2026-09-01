@@ -27,6 +27,12 @@ namespace Sora::SECI
 
 		virtual std::string GetName() const = 0;
 		virtual SECISubsystemPriority GetPriority() const { return SECISubsystemPriority::Normal; }
+
+		bool IsInitialized() const { return bIsInitialized; }
+		void SetInitialized(bool InState) { bIsInitialized = InState; }
+
+	private:
+		bool bIsInitialized{ false };
 	};
 
 } // namespace Sora::SECI

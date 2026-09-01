@@ -17,7 +17,12 @@ namespace Sora
 		virtual ~ApplicationSubsystem() override = default;
 
         virtual bool OnInitialize() override {
+            if (IsInitialized()) {
+				SORA_ENGINE_WARN("ApplicationSubsystem is already initialized.");
+				return true;
+            }
             SORA_ENGINE_INFO("ApplicationSubsystem Initialized.");
+            SetInitialized(true);
             return true;
         }
 
@@ -26,7 +31,12 @@ namespace Sora
         }
 
 		virtual void OnShutdown() override {
+			if (!IsInitialized()) {
+				SORA_ENGINE_WARN("ApplicationSubsystem is not initialized or already shut down.");
+				return;
+			}
 			SORA_ENGINE_INFO("ApplicationSubsystem Shutdown.");
+			SetInitialized(false);
 		}
 
 		virtual void OnEvent(SECI::SECIEvent& InEvent) override {

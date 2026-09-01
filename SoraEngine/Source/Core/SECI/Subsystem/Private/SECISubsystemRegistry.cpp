@@ -16,6 +16,7 @@ namespace Sora::SECI
 
 	bool SECISubsystemRegistry::InitializeAll() {
 		for (auto& System : RegisteredSubsystems) {
+			if (System->IsInitialized()) continue;
 			if (!System->OnInitialize()) {
 				return false;
 			}
@@ -38,11 +39,13 @@ namespace Sora::SECI
 
 
 	void SECISubsystemRegistry::ShutdownAll() {
-		for (auto it = RegisteredSubsystems.rbegin(); it != RegisteredSubsystems.rend(); ++it) {
-			if (EventBus) EventBus->Unsubscribe(it->get());
-			(*it)->OnShutdown();
+		for (auto It = RegisteredSubsystems.rbegin(); It != RegisteredSubsystems.rend(); ++It) {
+			auto& System = *It;
+			if (System->IsInitialized()) {
+				System->OnShutdown();
+				System->SetInitialized(false);
+			}
 		}
-		RegisteredSubsystems.clear();
 	}
 
 } // namespace Sora::SECI

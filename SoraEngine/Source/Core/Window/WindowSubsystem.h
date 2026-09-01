@@ -19,6 +19,10 @@ namespace Sora
 		virtual ~WindowSubsystem() override = default;
 		
 		virtual bool OnInitialize() override {
+			if (IsInitialized()) {
+				SORA_ENGINE_WARN("WindowSubsystem is already initialized.");
+				return true;
+			}
 			NativeWindow = Window::Create(Properties);
 			if (!NativeWindow) {
                 SORA_ENGINE_ERROR("Failed to initialize Native Window inside WindowSubsystem!");
@@ -30,6 +34,7 @@ namespace Sora
 			});
 
 			SORA_ENGINE_INFO("WindowSubsystem initialized successfully.");
+			SetInitialized(true);
 			return true;
 		}
 
@@ -38,8 +43,13 @@ namespace Sora
 		}
 
 		virtual void OnShutdown() override {
+			if (!IsInitialized()) {
+				SORA_ENGINE_WARN("WindowSubsystem is not initialized or already shut down.");
+				return;
+			}
 			NativeWindow.reset();
 			SORA_ENGINE_INFO("WindowSubsystem shut down.");
+			SetInitialized(false);
 		}
 
 		virtual void OnEvent(SECI::SECIEvent& InEvent) override {
@@ -73,7 +83,13 @@ namespace Sora
 
 		virtual std::string GetName() const override { return "WindowsSubsytem"; }
 		virtual SECI::SECISubsystemPriority GetPriority() const override { return SECI::SECISubsystemPriority::High; }
-	
+
+		void* GetNativeWindowHandle() const {
+			void* handle = NativeWindow ? NativeWindow->GetNativeWindow() : nullptr;
+			SORA_ENGINE_TRACE("GetNativeWindowHandle called. Returning handle: {}", handle);
+			return handle;
+		}
+
 	private:
 		SECI::SECIEventBus* EventBus{ nullptr };
 		WindowProperties Properties;
