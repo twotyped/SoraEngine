@@ -2,6 +2,7 @@
 
 #include "Core/SECI/Subsystem/Public/SECISubsystem.h"
 #include "Core/SECI/EventLayer/Public/SECIEvent.h"
+#include "Core/SECI/EventLayer/Public/SECIEventBus.h"
 #include "Core/Logging/Public/Log.h"
 #include "Public/RHIDevice.h"
 #include "Public/RHISwapchain.h"
@@ -14,8 +15,8 @@ namespace Sora
 
 	class SORA_API RHISubsystem : public SECI::SECISubsystem {
 	public:
-		explicit RHISubsystem(SECI::SECIEventBus* InEventBus, std::unique_ptr<RHI::RHIDevice> InDevice, void* InNativeWindowHandle)
-			: EventBus(InEventBus), Device(std::move(InDevice)), NativeWindowHandle(InNativeWindowHandle) {}
+		explicit RHISubsystem(SECI::SECIEventBus* InEventBus, std::shared_ptr<RHI::RHIDevice> InDevice, void* InNativeWindowHandle)
+			: EventBus(InEventBus), Device(InDevice), NativeWindowHandle(InNativeWindowHandle) {}
 		virtual ~RHISubsystem() = default;
 
 		void SetDevice(std::unique_ptr<RHI::RHIDevice> InDevice) {
@@ -37,34 +38,52 @@ namespace Sora
 
 		virtual bool OnInitialize() override {
 			if (!Device) {
-				SORA_ENGINE_ERROR("RHISubsystem failed to initialize: No RHIDevice set! You must set an RHIDevice.");
+				SORA_ENGINE_ERROR("RHISubsystem failed to initialize: No RHIDevice set!");
 				return false;
 			}
 
 			if (!NativeWindowHandle) {
-				SORA_ENGINE_ERROR("RHISubsystem failed to initialize: No native window handle set! You must set a native window handle.");
+				SORA_ENGINE_ERROR("RHISubsystem failed to initialize: No native window handle set!");
 				return false;
 			}
 
-			return Device->Initialize(NativeWindowHandle);
+			if (!Device->Initialize(NativeWindowHandle)) {
+				SORA_ENGINE_ERROR("RHISubsystem failed to initialize: RHIDevice initialization failed!");
+				return false;
+			}
+
+			auto Swapchain = Device->CreateSwapchain(NativeWindowHandle, 1280, 720);
+			if (!Swapchain) {
+				SORA_ENGINE_ERROR("RHISubsystem failed to initialize: Failed to create initial RHISwapchain!");
+				return false;
+			}
+
+			return true;
 		}
 
 		void OnUpdate(float InDeltaTime) {
-			if (!Device) {
-				return;
-			}
+			if (!Device) return;
 
 			Device->BeginFrame();
 
-			// Grab active swapchain texture & issue clear
 			auto Swapchain = Device->GetSwapchain();
-			if (Swapchain) {
-				auto CurrentTexture = Swapchain->GetCurrentBackBuffer();
-				auto CmdList = Device->GetMainCommandList();
+			auto CmdList = Device->GetMainCommandList();
 
-				if (CurrentTexture && CmdList) {
-					// Clear to a deep dark blue / charcoal color (R: 0.1, G: 0.1, B: 0.12, A: 1.0)
+			if (Swapchain && CmdList) {
+				auto CurrentTexture = Swapchain->GetCurrentBackBuffer();
+				if (CurrentTexture) {
+					// 1. Transition UNDEFINED/PRESENT -> TRANSFER_DST for Clear execution
+					CmdList->PipelineBarrier({
+						{ CurrentTexture, RHI::RHITextureLayout::Undefined, RHI::RHITextureLayout::TransferDst }
+					});
+
+					// 2. Perform Clear Operation
 					CmdList->ClearColorTexture(CurrentTexture, 0.1f, 0.1f, 0.12f, 1.0f);
+
+					// 3. Transition TRANSFER_DST -> PRESENT for Queue Submission
+					CmdList->PipelineBarrier({
+						{ CurrentTexture, RHI::RHITextureLayout::TransferDst, RHI::RHITextureLayout::Present }
+					});
 				}
 			}
 
@@ -81,11 +100,11 @@ namespace Sora
 		virtual std::string GetName() const override { return "RHISubsystem"; }
         virtual SECI::SECISubsystemPriority GetPriority() const override { return SECI::SECISubsystemPriority::High; }
 
-        RHI::RHIDevice* GetDevice() const { return Device.get(); }
+        std::shared_ptr<RHI::RHIDevice> GetDevice() const { return Device; }
 
 	private:
 		SECI::SECIEventBus* EventBus{ nullptr };
-		std::unique_ptr<RHI::RHIDevice> Device;
+		std::shared_ptr<RHI::RHIDevice> Device;
 		void* NativeWindowHandle{ nullptr };
 	};
 

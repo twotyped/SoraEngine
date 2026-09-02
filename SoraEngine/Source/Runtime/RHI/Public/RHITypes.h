@@ -48,4 +48,10 @@ namespace Sora::RHI
         uint32_t Height{ 0 };
     };
 
+	enum class ERHIPresentMode {
+        Immediate, // Off (Vulkan: VK_PRESENT_MODE_IMMEDIATE_KHR)
+        VSync,     // On (Vulkan: VK_PRESENT_MODE_FIFO_KHR)
+        Mailbox    // Fast V-Sync / Triple Buffer (Vulkan: VK_PRESENT_MODE_MAILBOX_KHR)
+    };
+
 } // namespace Sora::RHI

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "RHITypes.h"
+#include "Pipeline/RHIShaderModule.h"
+#include "Pipeline/RHIPipeline.h"
+#include "RHITexture.h"
 #include <memory>
 #include <string>
 
@@ -11,8 +14,7 @@ namespace Sora::RHI
     class RHISwapchain;
     class RHICommandList;
 
-    struct RHIDeviceCapabilities
-    {
+    struct RHIDeviceCapabilities {
         std::string DeviceName;
         uint32_t ApiVersion{ 0 };
         uint64_t DedicatedVideoMemory{ 0 };
@@ -30,8 +32,12 @@ namespace Sora::RHI
         virtual const RHIDeviceCapabilities& GetCapabilities() const = 0;
 
         virtual std::shared_ptr<RHIBuffer> CreateBuffer(const RHIBufferDesc& desc) = 0;
+		virtual std::shared_ptr<RHITexture> CreateTexture(const RHITextureDesc& InDesc) = 0;
         virtual std::shared_ptr<RHISwapchain> CreateSwapchain(void* windowHandle, uint32_t width, uint32_t height) = 0;
         virtual std::shared_ptr<RHICommandList> CreateCommandList() = 0;
+
+        virtual std::shared_ptr<RHIShaderModule> CreateShaderModule(const RHIShaderModuleDesc& desc) = 0;
+		virtual std::shared_ptr<RHIGraphicsPipeline> CreateGraphicsPipeline(const RHIGraphicsPipelineDesc& desc) = 0;
 
 		virtual void BeginFrame() = 0;
         virtual void EndFrame() = 0;

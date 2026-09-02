@@ -36,7 +36,8 @@ project "SoraEngine"
     files
     {
         "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp"
+        "%{prj.name}/Source/**.cpp",
+        "%{prj.name}/Source/**.slang"
     }
 
     includedirs
@@ -76,13 +77,16 @@ project "RuntimeSandbox"
 
     vpaths 
     {
-        ["*"] = "Source/**"
+        ["Source Files/*"] = "RuntimeSandbox/Source/**.cpp",
+        ["Header Files/*"] = "RuntimeSandbox/Source/**.h",
+        ["Shaders/*"]      = "RuntimeSandbox/Source/**.slang"
     }
 
     files
     {
         "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp"
+        "%{prj.name}/Source/**.cpp",
+        "%{prj.name}/Source/**.slang"
     }
 
     includedirs

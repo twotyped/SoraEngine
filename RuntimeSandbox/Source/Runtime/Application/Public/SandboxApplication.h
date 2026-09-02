@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Core/Application/Public/Application.h>
+#include <Runtime/RHI/Public/RHIDevice.h>
 
 #ifndef SORA_DEBUG
     #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
@@ -12,5 +13,5 @@ public:
     virtual ~SandboxApplication() override;
 
 protected:
-    virtual void OnRegisterSubsystems(Sora::SECI::SECISubsystemRegistry& InRegistry) override;
+    virtual void OnRegisterSubsystems(Sora::SECI::SECISubsystemRegistry& InRegistry, std::shared_ptr<Sora::RHI::RHIDevice> InDevice) override;
 };

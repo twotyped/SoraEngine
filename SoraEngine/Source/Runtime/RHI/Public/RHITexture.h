@@ -20,7 +20,7 @@ namespace Sora::RHI
         TransferSrc        = 1 << 4,
         TransferDst        = 1 << 5
     };
-
+      
 	struct RHITextureDesc {
         uint32_t Width{ 1 };
         uint32_t Height{ 1 };

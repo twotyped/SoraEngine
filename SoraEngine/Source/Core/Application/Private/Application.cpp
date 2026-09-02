@@ -2,7 +2,7 @@
 #include "Core/Logging/Public/Log.h"
 #include "Core/SECI/EventLayer/Public/SECIEventHandler.h"
 #include "Core/Window/WindowSubsystem.h"
-#include "Runtime/RHI/Public/Devices/Vulkan/VulkanDevice.h"
+#include "Runtime/RHI/Public/Vulkan/VulkanDevice.h"
 
 namespace Sora
 {
@@ -30,14 +30,14 @@ namespace Sora
 		}
 
 		// 3. Register RHI Subsystem
-		RhiSubsystem = Registry.RegisterSubsystem<RHISubsystem>(EventBus.get(), std::make_unique<RHI::VulkanDevice>(), NativeWindowHandle);
+		RhiSubsystem = Registry.RegisterSubsystem<RHISubsystem>(EventBus.get(), std::make_shared<RHI::VulkanDevice>(), NativeWindowHandle);
 		if (!RhiSubsystem) {
 			SORA_ENGINE_ERROR("Failed to register RHISubsystem!");
 			return false;
 		}
 
 		// 4. Register Sandbox / Client subsystems
-		OnRegisterSubsystems(Registry);
+		OnRegisterSubsystems(Registry, RhiSubsystem->GetDevice());
 
 		// 5. Single unified initialization call for all remaining subsystems
 		return Registry.InitializeAll();

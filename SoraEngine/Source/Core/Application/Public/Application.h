@@ -36,7 +36,7 @@ namespace Sora
         /**
          * @brief Override in Sandbox or Editor to register client-specific subsystems.
          */
-		virtual void OnRegisterSubsystems(SECI::SECISubsystemRegistry& InRegistry) {}
+		virtual void OnRegisterSubsystems(SECI::SECISubsystemRegistry& InRegistry, std::shared_ptr<RHI::RHIDevice> InDevice) {}
 
     protected:
         std::unique_ptr<SECI::SECIEventBus> EventBus;

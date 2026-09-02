@@ -5,7 +5,6 @@
 
 namespace Sora::RHI
 {
-
     class RHITexture;
 
     struct RHISwapchainDesc {
