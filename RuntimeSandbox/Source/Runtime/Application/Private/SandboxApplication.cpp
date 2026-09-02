@@ -99,14 +99,19 @@ namespace Sora
 			Device->BeginFrame();
 
             auto BackBuffer = Swapchain->GetCurrentBackBuffer();
-            auto CmdList = Device->GetMainCommandList();
+            auto CmdList = Device->CreateCommandList();
 
-            // 2. Transition Swapchain image to ColorAttachment layout
+            if (!CmdList || !BackBuffer) {
+				SORA_ENGINE_ERROR("CommandList or BackBuffer is null!");
+				return;
+			}
+
+            CmdList->Begin();
+
             CmdList->PipelineBarrier({
                 { BackBuffer, RHI::RHITextureLayout::Undefined, RHI::RHITextureLayout::ColorAttachment }
             });
 
-            // 3. Dynamic Rendering Scope (Clear to dark gray)
             RHI::RHIRenderingInfo RenderInfo{};
             RenderInfo.RenderArea = { 0, 0, Swapchain->GetDesc().Width, Swapchain->GetDesc().Height };
             RenderInfo.ColorAttachments = {
@@ -115,26 +120,25 @@ namespace Sora
 
             CmdList->BeginRendering(RenderInfo);
 
-            // 4. Bind Pipeline & Dynamic Viewport/Scissor States
             CmdList->BindPipeline(Pipeline);
             CmdList->SetViewport({ 0.0f, 0.0f, (float)Swapchain->GetDesc().Width, (float)Swapchain->GetDesc().Height, 0.0f, 1.0f });
             CmdList->SetScissor({ 0, 0, Swapchain->GetDesc().Width, Swapchain->GetDesc().Height });
 
-            // 5. Procedural Draw (3 vertices using SV_VertexID in Slang)
             CmdList->Draw(3);
 
             CmdList->EndRendering();
 
-            // 6. Transition Swapchain image to Present layout
             CmdList->PipelineBarrier({
                 { BackBuffer, RHI::RHITextureLayout::ColorAttachment, RHI::RHITextureLayout::Present }
             });
 
-            // 7. Submit Work & Present
-            Device->EndFrame();
+            CmdList->End();
 
-            auto VkDev = std::dynamic_pointer_cast<RHI::VulkanDevice>(Device);
+            CmdList->Submit();
+
             Swapchain->Present();
+
+            Device->EndFrame();
         }
 
         virtual void OnShutdown() override {

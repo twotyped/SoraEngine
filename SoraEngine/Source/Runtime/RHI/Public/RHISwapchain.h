@@ -12,6 +12,7 @@ namespace Sora::RHI
         uint32_t Height{ 720 };
         uint32_t BufferCount{ 3 }; // Triple buffering by default
         bool VSync{ true };
+		bool EnableHDR{ false };
         RHIFormat PreferredFormat{ RHIFormat::B8G8R8A8_UNORM };
     };
 

@@ -8,10 +8,18 @@ namespace Sora::RHI
 
 	enum class RHIFormat {
 		Unknown,
+
+        // SDR
 		R8G8B8A8_UNORM,		// 8-bit 4-byte unorm RGBA (typically Vulkan/OpenGL)
 		B8G8R8A8_UNORM,		// 8-bit 4-byte unorm BGRA (typically DirectX)
 		R32G32B32_FLOAT,	// 32-bit 12-byte float RGB
 		R32G32B32A32_FLOAT,	// 32-bit 16-byte float RGBA
+
+        // HDR
+		A2R10G10B10_UNORM,	// 10-bit 4-byte unorm ARGB (PQ)
+		R16G16B16A16_FLOAT,	// 16-bit 8-byte float RGBA (scRGB)
+        
+		// Depth formats
 		D24_UNORM_S8_UINT,  // 24-bit 4-byte uint depth buffer (8-bit stencil buffer)
         D32_SFLOAT,			// 32-bit 4-byte float depth buffer (no stencil buffer)
 	};

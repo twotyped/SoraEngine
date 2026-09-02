@@ -48,7 +48,8 @@ namespace Sora::RHI
 		virtual void Begin() = 0;
 		virtual void End() = 0;
 
-		// Dynamic Rendering Execution Hooks
+		virtual void Submit() = 0;
+
 		virtual void BeginRendering(const RHIRenderingInfo& renderingInfo) = 0;
 		virtual void EndRendering() = 0;
 

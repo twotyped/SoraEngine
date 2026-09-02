@@ -71,8 +71,7 @@ namespace Sora
 		}
 
 		virtual SECI::SECIEventCategory GetSubscribedEventCategories() const override {
-			return	SECI::EventCategoryInput |
-					SECI::EventCategoryWindow;
+			return SECI::EventCategoryNone;
         }
 
 		virtual std::string GetName() const override { return "WindowsSubsytem"; }
