@@ -10,3 +10,5 @@ Intermediates/
 Logs/
 
 vcpkg_installed/
+
+Shaders/
