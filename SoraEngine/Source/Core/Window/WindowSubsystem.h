@@ -19,10 +19,6 @@ namespace Sora
 		virtual ~WindowSubsystem() override = default;
 		
 		virtual bool OnInitialize() override {
-			//if (IsInitialized()) {
-			//	SORA_ENGINE_WARN("WindowSubsystem is already initialized. Continuing.");
-			//	return true;
-			//}
 			NativeWindow = Window::Create(Properties);
 			if (!NativeWindow) {
                 SORA_ENGINE_ERROR("Failed to initialize Native Window inside WindowSubsystem!");
@@ -60,7 +56,7 @@ namespace Sora
 			Dispatcher.Dispatch<SECI::WindowCloseEvent>([this](SECI::WindowCloseEvent& e) {
 				SORA_ENGINE_INFO("Window close requested.");
 				// Handle any pre-shutdown cleanup or signal application exit
-				return false; 
+				return true; 
 			});
 
 			// Handle Window Focus Lost / Gained
@@ -71,7 +67,7 @@ namespace Sora
 		}
 
 		virtual SECI::SECIEventCategory GetSubscribedEventCategories() const override {
-			return SECI::EventCategoryNone;
+			return SECI::EventCategoryWindow;
         }
 
 		virtual std::string GetName() const override { return "WindowsSubsytem"; }

@@ -39,7 +39,7 @@ namespace Sora
             Dispatcher.Dispatch<SECI::WindowCloseEvent>([this](SECI::WindowCloseEvent& e) {
                 SORA_ENGINE_INFO("Application received WindowCloseEvent. Requesting exit...");
                 IsRunning = false;
-                return true;
+                return false;
             });
         }
 
