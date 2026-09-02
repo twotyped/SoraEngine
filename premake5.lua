@@ -53,6 +53,10 @@ project "SoraEngine"
         "SORA_PLATFORM_WINDOWS"
     }
 
+    postbuildcommands {
+        '{COPY} "%{wks.location}/Binaries/' .. outputdir .. '/SoraEngine/SoraEngine.dll" "%{wks.location}/Binaries/' .. outputdir .. '/RuntimeSandbox"'
+    }
+
     filter "configurations:Debug"
         defines "SORA_DEBUG"
         runtime "Debug"
@@ -108,7 +112,6 @@ project "RuntimeSandbox"
     }
 
     postbuildcommands {
-        '{COPY} "%{wks.location}/Binaries/' .. outputdir .. '/SoraEngine/SoraEngine.dll" "$(TargetDir)"',
         '{COPY} "%{wks.location}/vcpkg_installed/x64-windows/bin/fmt.dll" "$(TargetDir)"'
     }
 

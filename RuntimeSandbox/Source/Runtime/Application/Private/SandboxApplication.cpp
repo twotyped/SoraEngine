@@ -57,13 +57,13 @@ namespace Sora
             RHI::RHIShaderModuleDesc VSDesc{};
             VSDesc.Stage = RHI::RHIShaderStage::Vertex;
             VSDesc.Bytecode = VSCodes;
-            VSDesc.EntryPoint = "main";
+            VSDesc.EntryPoint = "MainVS";
             auto VS = Device->CreateShaderModule(VSDesc);
 
             RHI::RHIShaderModuleDesc FSDesc{};
             FSDesc.Stage = RHI::RHIShaderStage::Fragment;
             FSDesc.Bytecode = FSCodes;
-            FSDesc.EntryPoint = "main";
+            FSDesc.EntryPoint = "MainFS";
             auto FS = Device->CreateShaderModule(FSDesc);
 
             RHI::RHIGraphicsPipelineDesc PipelineDesc{};
