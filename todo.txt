@@ -1,7 +1,2 @@
-x Refactor SECI into a decentralized subsystem architecture.
-x Set up a clean Graphics API Abstraction Layer (RHI).
-x Set up Vulkan initialization and basic use + Vulkan validation & debug messenger hooks.
-x Use VulkanDevice through the RHI Abstraction in ApplicationSubsytem and apply it to RuntimeSandbox.
-x Implement a basic RHI Abstracted rendering pipeline.
-x Use Vulkan to create a basic triangle on a black window.
-[ ] Implement Slang Shader Language and create a Slang Subsystem
+x Use Vulkan to create a basic RGB triangle.
+Implement Slang Shader Language and create a Slang Subsystem

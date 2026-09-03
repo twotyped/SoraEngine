@@ -97,6 +97,26 @@ namespace Sora
 			}
         }
 
+		virtual void OnEvent(SECI::SECIEvent& InEvent) override {
+			SECI::SECIEventHandler Dispatcher(InEvent);
+
+			Dispatcher.Dispatch<SECI::WindowResizeEvent>([this](SECI::WindowResizeEvent& e) {
+				SORA_ENGINE_TRACE("RHISubsystem, Window Resized: {0}x{1}", e.GetWidth(), e.GetHeight());
+				if (Device->GetSwapchain()) {
+					Device->GetSwapchain()->Resize(e.GetWidth(), e.GetHeight());
+				} else {
+					SORA_ENGINE_ERROR("RHISubsystem, Device's Swapchain is null.");
+					return false;
+				}
+				return false;
+			});
+
+		}
+
+		virtual SECI::SECIEventCategory GetSubscribedEventCategories() const override {
+			return SECI::EventCategoryWindow;
+        }
+
 		virtual std::string GetName() const override { return "RHISubsystem"; }
         virtual SECI::SECISubsystemPriority GetPriority() const override { return SECI::SECISubsystemPriority::High; }
 

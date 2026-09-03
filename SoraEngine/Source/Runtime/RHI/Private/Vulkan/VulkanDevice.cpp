@@ -239,9 +239,9 @@ namespace Sora::RHI
 		Desc.Width = InWidth;
 		Desc.Height = InHeight;
 
-		return std::make_shared<VulkanSwapchain>(
-			this, InWidth, InHeight, Desc
-		);
+		Swapchain = std::make_shared<VulkanSwapchain>(this, InWidth, InHeight, Desc);
+
+		return Swapchain;
 	}
 
 	std::shared_ptr<RHICommandList> VulkanDevice::CreateCommandList() {
