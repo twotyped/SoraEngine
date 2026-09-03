@@ -67,8 +67,8 @@ namespace Sora::SECI
 	}
 
 	void SECISubsystemRegistry::ShutdownAll() {
-		for (auto It = RegisteredSubsystems.rbegin(); It != RegisteredSubsystems.rend(); ++It) {
-			ShutdownSubsystem(It->get());
+		while (!RegisteredSubsystems.empty()) {
+			ShutdownSubsystem(RegisteredSubsystems.back().get());
 		}
 	}
 

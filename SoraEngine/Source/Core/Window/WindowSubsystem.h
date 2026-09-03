@@ -56,6 +56,11 @@ namespace Sora
 			Dispatcher.Dispatch<SECI::WindowCloseEvent>([this](SECI::WindowCloseEvent& e) {
 				SORA_ENGINE_INFO("WindowSubsystem, Window close requested.");
 				// Handle any pre-shutdown cleanup or signal application exit
+
+				if (NativeWindow) {
+					NativeWindow->Shutdown();
+				}
+
 				return true; 
 			});
 

@@ -25,9 +25,10 @@ namespace Sora
 
         SORA_NO_DISCARD inline void* GetNativeWindow() const override { return WindowHandle; }
 
+        virtual void Shutdown() override;
+
     private:
         virtual void Initialize(const WindowProperties& InProps);
-        virtual void Shutdown();
 
         static LRESULT CALLBACK WindowProc(HWND InHwnd, UINT InMsg, WPARAM InWParam, LPARAM InLParam);
 

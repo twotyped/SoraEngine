@@ -102,12 +102,7 @@ namespace Sora
 
 			Dispatcher.Dispatch<SECI::WindowResizeEvent>([this](SECI::WindowResizeEvent& e) {
 				SORA_ENGINE_TRACE("RHISubsystem, Window Resized: {0}x{1}", e.GetWidth(), e.GetHeight());
-				if (Device->GetSwapchain()) {
-					Device->GetSwapchain()->Resize(e.GetWidth(), e.GetHeight());
-				} else {
-					SORA_ENGINE_ERROR("RHISubsystem, Device's Swapchain is null.");
-					return false;
-				}
+				Device->GetSwapchain()->Resize(e.GetWidth(), e.GetHeight());
 				return false;
 			});
 

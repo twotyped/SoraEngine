@@ -84,16 +84,14 @@ namespace Sora
         SORA_ENGINE_INFO("Created Win32 Window: \'{0}\' ({1}x{2})", WindowData.Title, WindowData.Width, WindowData.Height);
     }
 
-    void WindowsWindow::Shutdown()
-    {
+    void WindowsWindow::Shutdown() {
         if (WindowHandle) {
             DestroyWindow(WindowHandle);
             WindowHandle = nullptr;
         }
     }
 
-    void WindowsWindow::OnUpdate()
-    {
+    void WindowsWindow::OnUpdate() {
         MSG msg = {};
         while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
@@ -101,19 +99,15 @@ namespace Sora
         }
     }
 
-    void WindowsWindow::SetVSync(bool InEnabled)
-    {
+    void WindowsWindow::SetVSync(bool InEnabled) {
         WindowData.VSync = InEnabled;
     }
 
-    LRESULT CALLBACK WindowsWindow::WindowProc(HWND InHwnd, UINT InMsg, WPARAM InWParam, LPARAM InLParam)
-    {
+    LRESULT CALLBACK WindowsWindow::WindowProc(HWND InHwnd, UINT InMsg, WPARAM InWParam, LPARAM InLParam) {
         WindowDataInternal* data = reinterpret_cast<WindowDataInternal*>(GetWindowLongPtr(InHwnd, GWLP_USERDATA));
 
-        switch (InMsg)
-        {
-            case WM_SIZE:
-            {
+        switch (InMsg) {
+            case WM_SIZE: {
                 if (data) {
                     data->Width = LOWORD(InLParam);
                     data->Height = HIWORD(InLParam);
@@ -126,17 +120,16 @@ namespace Sora
                 return 0;
             }
             
-            case WM_CLOSE:
-            {
+            case WM_CLOSE: {
                 if (data && data->EventCallback) {
                     SECI::WindowCloseEvent Event;
                     data->EventCallback(Event);
                 }
+                DestroyWindow(InHwnd);
                 return 0;
             }
 
-            case WM_KILLFOCUS:
-			{
+            case WM_KILLFOCUS: {
 				if (data && data->EventCallback) {
 					SECI::WindowLostFocusEvent Event;
 					data->EventCallback(Event);
@@ -144,14 +137,13 @@ namespace Sora
 				return 0;
 			}
 
-            case WM_DESTROY:
-            {
+            case WM_DESTROY: {
+                SetWindowLongPtr(InHwnd, GWLP_USERDATA, 0);
                 PostQuitMessage(0);
                 return 0;
             }
 
-            case WM_KEYDOWN:
-            {
+            case WM_KEYDOWN: {
                 if (data && data->EventCallback) {
                     bool IsRepeat = (InLParam & 0x40000000) != 0;
                     SECI::KeyPressedEvent Event(static_cast<KeyCode>(InWParam), IsRepeat);
@@ -161,8 +153,7 @@ namespace Sora
             }
 
             case WM_KEYUP:
-			case WM_SYSKEYUP:
-			{
+			case WM_SYSKEYUP: {
 				if (data && data->EventCallback) {
 					SECI::KeyReleasedEvent Event(static_cast<KeyCode>(InWParam));
 					data->EventCallback(Event);
@@ -170,8 +161,7 @@ namespace Sora
 				return 0;
 			}
 
-            case WM_MOUSEMOVE:
-			{
+            case WM_MOUSEMOVE: {
 				if (data && data->EventCallback) {
 					float x = static_cast<float>(LOWORD(InLParam));
 					float y = static_cast<float>(HIWORD(InLParam));
@@ -181,8 +171,7 @@ namespace Sora
 				return 0;
 			}
 
-            case WM_LBUTTONDOWN:
-			{
+            case WM_LBUTTONDOWN: {
 				if (data && data->EventCallback) {
 					SECI::MouseButtonPressedEvent event(Mouse::ButtonLeft);
 					data->EventCallback(event);
@@ -190,8 +179,7 @@ namespace Sora
 				return 0;
 			}
 
-            case WM_LBUTTONUP:
-			{
+            case WM_LBUTTONUP: {
 				if (data && data->EventCallback) {
 					SECI::MouseButtonReleasedEvent event(Mouse::ButtonLeft);
 					data->EventCallback(event);
@@ -199,8 +187,7 @@ namespace Sora
 				return 0;
 			}
 
-			case WM_RBUTTONDOWN:
-			{
+			case WM_RBUTTONDOWN: {
 				if (data && data->EventCallback) {
 					SECI::MouseButtonPressedEvent event(Mouse::ButtonRight);
 					data->EventCallback(event);
@@ -208,8 +195,7 @@ namespace Sora
 				return 0;
 			}
 
-			case WM_RBUTTONUP:
-			{
+			case WM_RBUTTONUP: {
 				if (data && data->EventCallback) {
 					SECI::MouseButtonReleasedEvent event(Mouse::ButtonRight);
 					data->EventCallback(event);
@@ -217,8 +203,7 @@ namespace Sora
 				return 0;
 			}
 
-			case WM_MOUSEWHEEL:
-			{
+			case WM_MOUSEWHEEL: {
 				if (data && data->EventCallback) {
 					float yOffset = static_cast<float>(GET_WHEEL_DELTA_WPARAM(InWParam)) / WHEEL_DELTA;
 					SECI::MouseScrolledEvent event(0.0f, yOffset);

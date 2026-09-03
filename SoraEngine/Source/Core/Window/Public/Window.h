@@ -43,6 +43,8 @@ namespace Sora
 
         SORA_NO_DISCARD virtual void* GetNativeWindow() const = 0;
 
+        virtual void Shutdown() = 0;
+
         /**
          * @brief Factory method to create the platform-native window implementation.
          */

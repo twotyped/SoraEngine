@@ -259,6 +259,10 @@ namespace Sora::RHI
 	void VulkanDevice::Shutdown() {
 		WaitIdle();
 
+		if (Swapchain) {
+			Swapchain.reset();
+		}
+
 		for (size_t i = 0; i < MaxFramesInFlight; ++i) {
 			if (i < ImageAvailableSemaphores.size() && ImageAvailableSemaphores[i]) vkDestroySemaphore(LogicalDevice, ImageAvailableSemaphores[i], nullptr);
 			if (i < RenderFinishedSemaphores.size() && RenderFinishedSemaphores[i]) vkDestroySemaphore(LogicalDevice, RenderFinishedSemaphores[i], nullptr);
