@@ -10,6 +10,7 @@
 #include "Runtime/RHI/RHISubsystem.h"
 #include "Core/Window/WindowSubsystem.h"
 #include "Runtime/Slang/SlangSubsystem.h"
+#include "Core/VFS/VFSSubsystem.h"
 
 #include <memory>
 
@@ -46,6 +47,7 @@ namespace Sora
         std::shared_ptr<ApplicationSubsystem> pAppSubsystem;
         std::shared_ptr<WindowSubsystem> pWinSubsystem;
         std::shared_ptr<RHISubsystem> pRhiSubsystem;
+        std::shared_ptr<VFSSubsystem> pVfsSubsystem;
         std::shared_ptr<SlangSubsystem> pSlangSubsystem;
 
 	};

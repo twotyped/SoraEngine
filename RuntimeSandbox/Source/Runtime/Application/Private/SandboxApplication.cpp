@@ -34,11 +34,11 @@ namespace Sora
                 return false;
             }
 
-            std::cout << "Current Working Directory: " 
-			  << std::filesystem::current_path() << std::endl;
+     //       std::cout << "Current Working Directory: " 
+			  //<< std::filesystem::current_path() << std::endl;
 
-            ShaderCompilationResult VertexResult = pSlangSubsystem->CompileShader("RuntimeSandbox/Source/Shaders/Triangle.slang", "MainVS");
-            ShaderCompilationResult FragmentResult = pSlangSubsystem->CompileShader("RuntimeSandbox/Source/Shaders/Triangle.slang", "MainFS");
+            ShaderCompilationResult VertexResult = pSlangSubsystem->CompileShader("shaders://Triangle.slang", "MainVS");
+            ShaderCompilationResult FragmentResult = pSlangSubsystem->CompileShader("shaders://Triangle.slang", "MainFS");
 
             RHI::RHIShaderModuleDesc VSDesc{};
             VSDesc.Stage = RHI::RHIShaderStage::Vertex;

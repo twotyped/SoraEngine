@@ -58,9 +58,12 @@ project "SoraEngine"
     }
 
     filter "configurations:Debug"
-        defines "SORA_DEBUG"
         runtime "Debug"
         symbols "on"
+        defines {
+            "SORA_DEBUG",
+            'SORA_SOURCE_DIR=R"(' .. _MAIN_SCRIPT_DIR .. ')"'
+        }
 
     filter "configurations:Release"
         defines "SORA_RELEASE"

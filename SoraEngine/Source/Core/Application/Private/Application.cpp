@@ -16,6 +16,8 @@ namespace Sora
 	bool Application::Initialize() {
 		pAppSubsystem = Registry.RegisterSubsystem<ApplicationSubsystem>(EventBus.get());
 		pWinSubsystem = Registry.RegisterSubsystem<WindowSubsystem>(EventBus.get(), WindowProperties("SoraEngine: RuntimeSandbox", 1280, 720));
+		pVfsSubsystem = Registry.RegisterSubsystem<VFSSubsystem>();
+		pSlangSubsystem = Registry.RegisterSubsystem<SlangSubsystem>(EventBus.get(), pVfsSubsystem, ShaderTargetAPI::SPIRV);
 
 		if (pWinSubsystem && !Registry.InitializeSubsystem(pWinSubsystem.get())) {
 			SORA_ENGINE_ERROR("Failed to initialize WindowSubsystem!");
@@ -31,12 +33,6 @@ namespace Sora
 		pRhiSubsystem = Registry.RegisterSubsystem<RHISubsystem>(EventBus.get(), std::make_shared<RHI::VulkanDevice>(), NativeWindowHandle);
 		if (!pRhiSubsystem) {
 			SORA_ENGINE_ERROR("Failed to register RHISubsystem!");
-			return false;
-		}
-
-		pSlangSubsystem = Registry.RegisterSubsystem<SlangSubsystem>(EventBus.get(), ShaderTargetAPI::SPIRV);
-		if (!pSlangSubsystem) {
-			SORA_ENGINE_ERROR("Failed to register SlangSubsystem!");
 			return false;
 		}
 

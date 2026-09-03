@@ -1,10 +1,10 @@
 x Use Vulkan to create a basic RGB triangle.
 x Implement Slang Shader Language and create a Slang Subsystem
+x Implement a basic Virtual File System (VFS)
 
 Blocks
-1. Implement a basic Virtual File System (VFS)
-2. Slang Native Shader Compilation & VFS Integration
-3. 3D Mathematics & Depth Pipeline Update
-4. Textures, Models, and the World Graph
-5. The Global Audio Output System
-6. The Sora Engine Editor Application
+1. Slang Native Shader Compilation & VFS Integration
+2. 3D Mathematics & Depth Pipeline Update
+3. Textures, Models, and the World Graph
+4. The Global Audio Output System
+5. The Sora Engine Editor Application

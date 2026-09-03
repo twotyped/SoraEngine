@@ -2,6 +2,7 @@
 
 #include "Core/SECI/Subsystem/Public/SECISubsystem.h"
 #include "Core/SECI/EventLayer/Public/SECIEventBus.h"
+#include "Core/VFS/VFSSubsystem.h"
 #include "Core/Logging/Public/Log.h"
 #include <slang.h>
 #include <slang-com-ptr.h>
@@ -32,8 +33,8 @@ namespace Sora
 
 	class SORA_API SlangSubsystem : public SECI::SECISubsystem {
 	public:
-		explicit SlangSubsystem(SECI::SECIEventBus* InEventBus, ShaderTargetAPI InTargetAPI = ShaderTargetAPI::SPIRV)
-			: EventBus(InEventBus), TargetAPI(InTargetAPI) {}
+		explicit SlangSubsystem(SECI::SECIEventBus* InEventBus, std::shared_ptr<VFSSubsystem> InVfsSubsystem, ShaderTargetAPI InTargetAPI = ShaderTargetAPI::SPIRV)
+			: EventBus(InEventBus), TargetAPI(InTargetAPI), pVfsSubsystem(InVfsSubsystem) {}
 
 		virtual ~SlangSubsystem() override {
 			OnShutdown();
@@ -69,10 +70,9 @@ namespace Sora
 				SORA_ENGINE_ERROR("SlangSubsystem, Failed to initialize SlangSubsystem: SoraEngine only supports Vulkan as of now.");
 				return false;
 			}
-
 			
 			SessionDesc.compilerOptionEntries = options.data();
-			SessionDesc.compilerOptionEntryCount = options.size();
+			SessionDesc.compilerOptionEntryCount = static_cast<uint32_t>(options.size());
 
 			if (SlangGlobalSession->createSession(SessionDesc, &SlangCompileSession) != SLANG_OK) {
 				SORA_ENGINE_ERROR("SlangSubsystem, Failed to create Slang compilation session!");
@@ -84,7 +84,7 @@ namespace Sora
 		}
 
 		ShaderCompilationResult CompileShader(
-			const std::string& InFilePath,
+			const std::string& InVirtualFilePath,
 			const std::string& InEntryPointName
 		) {
 			ShaderCompilationResult Result{};
@@ -95,24 +95,34 @@ namespace Sora
 				}
 			};
 
-			std::ifstream File(InFilePath);
-			if (!File.is_open()) {
-				SORA_ENGINE_ERROR("SlangSubsystem, Failed to open file {0}", InFilePath);
-				Result.ErrorMessage = "Failed to open file.";
+			//std::ifstream File(InFilePath);
+			//if (!File.is_open()) {
+			//	SORA_ENGINE_ERROR("SlangSubsystem, Failed to open file {0}", InFilePath);
+			//	Result.ErrorMessage = "Failed to open file.";
+			//	return Result;
+			//}
+
+			VFSBlob FileBlob = pVfsSubsystem->ReadFile(InVirtualFilePath);
+			if (!FileBlob.IsValid()) {
+				SORA_ENGINE_ERROR("SlangSubsystem, Could not open file {0}", InVirtualFilePath);
+				Result.ErrorMessage = "Could not open file.";
 				return Result;
 			}
 
-			std::stringstream Buffer;
-			Buffer << File.rdbuf();
-			std::string ShaderSource = Buffer.str();
+			FileBlob.Data.push_back('\0');
+			const char* ShaderSource = reinterpret_cast<const char*>(FileBlob.Data.data());
+
+			//std::stringstream Buffer;
+			//Buffer << File.rdbuf();
+			//std::string ShaderSource = Buffer.str();
 
 			Slang::ComPtr<slang::IModule> SlangModule;
 			{
 				Slang::ComPtr<slang::IBlob> diagnosticsBlob;
 				SlangModule = SlangCompileSession->loadModuleFromSourceString(
-					InFilePath.c_str(), // Module logical name
-					InFilePath.c_str(), // Path
-					ShaderSource.c_str(),
+					InVirtualFilePath.c_str(), // Module logical name
+					InVirtualFilePath.c_str(), // Path
+					ShaderSource,
 					diagnosticsBlob.writeRef()
 				);
 				LogDiagnostics(diagnosticsBlob);
@@ -126,7 +136,7 @@ namespace Sora
 			{
 				SlangModule->findEntryPointByName(InEntryPointName.c_str(), EntryPoint.writeRef());
 				if (!EntryPoint) {
-					SORA_ENGINE_ERROR("SlangSubsystem: Failed to locate entry point name '{0}' inside module '{1}'", InEntryPointName, InFilePath);
+					SORA_ENGINE_ERROR("SlangSubsystem: Failed to locate entry point name '{0}' inside module '{1}'", InEntryPointName, InVirtualFilePath);
 					return Result;
 				}
 			}
@@ -177,7 +187,7 @@ namespace Sora
 			std::memcpy(Result.Bytecode.data(), SpirvCode->getBufferPointer(), sizeInBytes);
 			Result.bSuccess = true;
 
-			SORA_ENGINE_INFO("SlangSubsystem: Successfully compiled '{0}' [{1}] down to {2} bytes of SPIR-V.", InFilePath, InEntryPointName, sizeInBytes);
+			SORA_ENGINE_INFO("SlangSubsystem: Successfully compiled '{0}' [{1}] down to {2} bytes of SPIR-V.", InVirtualFilePath, InEntryPointName, sizeInBytes);
 			return Result;
 		}
 
@@ -202,5 +212,7 @@ namespace Sora
 		SECI::SECIEventBus* EventBus{ nullptr };
 		slang::IGlobalSession* SlangGlobalSession{ nullptr };
 		slang::ISession* SlangCompileSession{ nullptr };
+
+		std::shared_ptr<VFSSubsystem> pVfsSubsystem;
 	};
 }
