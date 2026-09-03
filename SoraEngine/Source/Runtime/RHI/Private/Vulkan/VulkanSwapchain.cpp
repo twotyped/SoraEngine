@@ -1,5 +1,4 @@
 #include "Runtime/RHI/Public/Vulkan/VulkanSwapchain.h"
-#include "Runtime/RHI/Public/Vulkan/VulkanTexture.h"
 #include "Runtime/RHI/Public/RHITexture.h"
 #include "Core/Logging/Public/Log.h"
 
@@ -94,7 +93,20 @@ namespace Sora::RHI
                 vkDestroyImageView(LogicalDevice, view, nullptr);
             }
         }
+
         SwapchainImageViews.clear();
+
+		if (DepthImageView != VK_NULL_HANDLE) {
+			vkDestroyImageView(LogicalDevice, DepthImageView, nullptr);
+			DepthImageView = VK_NULL_HANDLE;
+		}
+		if (DepthImage != VK_NULL_HANDLE) {
+			vmaDestroyImage(Device->GetVmaAllocator(), DepthImage, DepthAllocation);
+			DepthImage = VK_NULL_HANDLE;
+			DepthAllocation = VK_NULL_HANDLE;
+		}
+
+		DepthTexture.reset();
     }
 
 	VkSurfaceFormatKHR VulkanSwapchain::ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& AvailableFormats) {
@@ -230,8 +242,6 @@ namespace Sora::RHI
 		SwapchainImages.resize(ImageCount);
 		vkGetSwapchainImagesKHR(LogicalDevice, Swapchain, &ImageCount, SwapchainImages.data());
 
-		// Keep BufferCount truthful in case the driver handed back a different count than what we requested.
-		// This can happen on some platforms where the driver may choose to return a different number of images than requested.
 		Desc.BufferCount = ImageCount;
 
 		SwapchainImageViews.resize(SwapchainImages.size());
@@ -297,6 +307,70 @@ namespace Sora::RHI
                 return false;
             }
         }
+
+		if (DepthImageView != VK_NULL_HANDLE) {
+			vkDestroyImageView(LogicalDevice, DepthImageView, nullptr);
+			DepthImageView = VK_NULL_HANDLE;
+		}
+		if (DepthImage != VK_NULL_HANDLE) {
+			vmaDestroyImage(Device->GetVmaAllocator(), DepthImage, DepthAllocation);
+			DepthImage = VK_NULL_HANDLE;
+			DepthAllocation = VK_NULL_HANDLE;
+		}
+
+		VkFormat DepthFormat = VK_FORMAT_D32_SFLOAT;
+
+		VkImageCreateInfo DepthImageInfo{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
+		DepthImageInfo.imageType = VK_IMAGE_TYPE_2D;
+		DepthImageInfo.extent.width = SwapchainExtent.width;
+		DepthImageInfo.extent.height = SwapchainExtent.height;
+		DepthImageInfo.extent.depth = 1;
+		DepthImageInfo.mipLevels = 1;
+		DepthImageInfo.arrayLayers = 1;
+		DepthImageInfo.format = DepthFormat;
+		DepthImageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+		DepthImageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		DepthImageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT; 
+		DepthImageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+		DepthImageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+		VmaAllocationCreateInfo DepthAllocInfo{};
+		DepthAllocInfo.usage = VMA_MEMORY_USAGE_AUTO;
+		DepthAllocInfo.preferredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+
+		if (vmaCreateImage(Device->GetVmaAllocator(), &DepthImageInfo, &DepthAllocInfo, &DepthImage, &DepthAllocation, nullptr) != VK_SUCCESS) {
+			SORA_ENGINE_ERROR("VulkanSwapchain: Failed to allocate hardware Depth Image memory via VMA!");
+			return false;
+		}
+
+		VkImageViewCreateInfo DepthViewInfo{ VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
+		DepthViewInfo.image = DepthImage;
+		DepthViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		DepthViewInfo.format = DepthFormat;
+		DepthViewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+		DepthViewInfo.subresourceRange.baseMipLevel = 0;
+		DepthViewInfo.subresourceRange.levelCount = 1;
+		DepthViewInfo.subresourceRange.baseArrayLayer = 0;
+		DepthViewInfo.subresourceRange.layerCount = 1;
+
+		if (vkCreateImageView(LogicalDevice, &DepthViewInfo, nullptr, &DepthImageView) != VK_SUCCESS) {
+			SORA_ENGINE_ERROR("VulkanSwapchain: Failed to create hardware Depth Image View!");
+			return false;
+		}
+
+		RHITextureDesc DepthTextureDesc{};
+		DepthTextureDesc.Width = SwapchainExtent.width;
+		DepthTextureDesc.Height = SwapchainExtent.height;
+		DepthTextureDesc.Format = static_cast<RHIFormat>(DepthFormat);
+		DepthTextureDesc.Usage = RHITextureUsage::DepthStencilAttachment;
+
+		DepthTexture = std::make_shared<VulkanTexture>(
+			DepthImage,
+			DepthImageView,
+			DepthTextureDesc,
+			DepthFormat
+		);
+		DepthTexture->SetCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED);
 
 		return true;
 	}

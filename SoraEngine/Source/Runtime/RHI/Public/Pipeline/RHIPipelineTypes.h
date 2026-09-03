@@ -58,6 +58,8 @@ namespace Sora::RHI
         bool DepthTestEnable{ true };
         bool DepthWriteEnable{ true };
         RHICompareOp DepthCompareOp{ RHICompareOp::Less };
+        bool DepthBoundsTestEnable{ false };
+        bool StencilTestEnable{ false };
     };
 
     enum class RHIBlendFactor {

@@ -27,6 +27,8 @@ namespace Sora::RHI
         virtual std::shared_ptr<RHITexture> GetCurrentBackBuffer() const = 0;
         virtual uint32_t GetCurrentImageIndex() const = 0;
         virtual const RHISwapchainDesc& GetDesc() const = 0;
+
+        virtual std::shared_ptr<RHITexture> GetDepthTexture() const = 0;
     };
 
 } // namespace Sora::RHI

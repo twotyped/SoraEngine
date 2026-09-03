@@ -154,6 +154,8 @@ namespace Sora::RHI
 		DepthStencilState.depthTestEnable = Desc.DepthStencilState.DepthTestEnable ? VK_TRUE : VK_FALSE;
 		DepthStencilState.depthWriteEnable = Desc.DepthStencilState.DepthWriteEnable ? VK_TRUE : VK_FALSE;
 		DepthStencilState.depthCompareOp = ToVkCompareOp(Desc.DepthStencilState.DepthCompareOp);
+		DepthStencilState.depthBoundsTestEnable = Desc.DepthStencilState.DepthBoundsTestEnable ? VK_TRUE : VK_FALSE;
+		DepthStencilState.stencilTestEnable = Desc.DepthStencilState.StencilTestEnable ? VK_TRUE : VK_FALSE;
  
 		// --- Blend state: one attachment entry per color attachment format. Fall back to
 		// a single default (non-blending, RGBA write) attachment if none were specified. ---

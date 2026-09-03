@@ -104,6 +104,11 @@ namespace Sora
                 { BackBuffer, true, { 0.05f, 0.05f, 0.05f, 1.0f } }
             };
 
+            RenderInfo.HasDepthAttachment = true;
+            RenderInfo.DepthAttachment.Texture = Swapchain->GetDepthTexture();
+            RenderInfo.DepthAttachment.ClearOnLoad = true;
+            RenderInfo.DepthAttachment.ClearColor = { 1.0f, 0.0f, 0.0f, 0.0f }; 
+
             CmdList->BeginRendering(RenderInfo);
 
             CmdList->BindPipeline(Pipeline);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Runtime/RHI/Public/RHISwapchain.h"
+#include "VulkanTexture.h"
 #include "VulkanDevice.h"
 #include <vulkan/vulkan.h>
 #include <vector>
@@ -41,6 +42,7 @@ namespace Sora::RHI
 		bool CreateSwapchain();
 		void DestroyImageViews();
 		void CleanupSwapchain();
+		virtual std::shared_ptr<RHITexture> GetDepthTexture() const override { return DepthTexture; }
 
 		VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& AvailableFormats);
 		VkPresentModeKHR ChoosePresentMode(const std::vector<VkPresentModeKHR>& AvailablePresentModes);
@@ -69,5 +71,10 @@ namespace Sora::RHI
 
 		std::vector<VkSemaphore> ImageAvailableSemaphores;
 		std::vector<VkSemaphore> RenderFinishedSemaphores;
+
+		VkImage DepthImage{ VK_NULL_HANDLE };
+		VkImageView DepthImageView{ VK_NULL_HANDLE };
+		VmaAllocation DepthAllocation{ VK_NULL_HANDLE };
+		std::shared_ptr<VulkanTexture> DepthTexture{ nullptr };
 	};
 } // namespace Sora::RHI

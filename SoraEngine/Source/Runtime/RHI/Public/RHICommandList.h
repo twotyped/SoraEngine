@@ -2,6 +2,7 @@
 
 #include "RHITypes.h"
 #include "Runtime/RHI/Public/Pipeline/RHIPipeline.h"
+#include <array>
 #include <memory>
 #include <initializer_list>
 
@@ -31,7 +32,7 @@ namespace Sora::RHI
     struct RHIRenderingAttachmentInfo {
 		std::shared_ptr<RHITexture> Texture{ nullptr };
 		bool ClearOnLoad{ true };
-		float ClearColor[4]{ 0.0f, 0.0f, 0.0f, 1.0f };
+		std::array<float, 4> ClearColor{ 0.0f, 0.0f, 0.0f, 1.0f };
 	};
 
 	struct RHIRenderingInfo {

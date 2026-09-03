@@ -1,10 +1,17 @@
 #pragma once
 
-#include "Runtime/RHI/Public/RHIDevice.h"
+#if defined(_WIN32)
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN
+    #endif
+    #include <windows.h>
+    #define VK_USE_PLATFORM_WIN32_KHR
+#endif
 
-#define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
 #include <vma/vk_mem_alloc.h>
+
+#include "Runtime/RHI/Public/RHIDevice.h"
 
 #include <vector>
 #include <memory>
