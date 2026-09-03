@@ -2,17 +2,14 @@
 #include <Core/Application/Public/EntryPoint.h>
 #include <Core/Logging/Public/Log.h>
 #include <Core/SECI/Subsystem/Public/SECISubsystem.h>
-
 #include <Runtime/RHI/Public/RHIDevice.h>
 #include <Runtime/RHI/Public/RHISwapchain.h>
 #include <Runtime/RHI/Public/RHICommandList.h>
 #include <Runtime/RHI/Public/Pipeline/RHIPipeline.h>
 #include <Runtime/RHI/Public/Pipeline/RHIShaderModule.h>
-
 #include <Runtime/RHI/Public/Vulkan/VulkanDevice.h>
-
+#include <Runtime/Slang/SlangSubsystem.h>
 #include "Runtime/Shaders/Public/ShaderHelpers.h"
-
 #include <filesystem>
 #include <iostream>
 
@@ -24,8 +21,8 @@ namespace Sora
     class SandboxSubsystem : public SECI::SECISubsystem {
     public:
         SandboxSubsystem() = default;
-		explicit SandboxSubsystem(std::shared_ptr<RHI::RHIDevice> InDevice)
-            : Device(InDevice) {}
+		explicit SandboxSubsystem(std::shared_ptr<RHI::RHIDevice> InDevice, std::shared_ptr<SlangSubsystem> InSlangSubsystem)
+            : Device(InDevice), pSlangSubsystem(InSlangSubsystem) {}
 
         virtual ~SandboxSubsystem() override = default;
 
@@ -40,29 +37,18 @@ namespace Sora
             std::cout << "Current Working Directory: " 
 			  << std::filesystem::current_path() << std::endl;
 
-			// Check if the file actually exists from the program's perspective
-			if (!std::filesystem::exists("Shaders/TriangleVS.spv")) {
-				std::cerr << "File NOT FOUND at: " 
-						  << std::filesystem::absolute("Shaders/TriangleVS.spv") << std::endl;
-			}
-
-            auto VSCodes = Shader::LoadSPIRV("Shaders/TriangleVS.spv");
-            auto FSCodes = Shader::LoadSPIRV("Shaders/TriangleFS.spv");
-
-            if (VSCodes.empty() || FSCodes.empty()) {
-                SORA_CLIENT_ERROR("Failed to load SPIR-V shader files!");
-                return false;
-            }
+            ShaderCompilationResult VertexResult = pSlangSubsystem->CompileShader("RuntimeSandbox/Source/Shaders/Triangle.slang", "MainVS");
+            ShaderCompilationResult FragmentResult = pSlangSubsystem->CompileShader("RuntimeSandbox/Source/Shaders/Triangle.slang", "MainFS");
 
             RHI::RHIShaderModuleDesc VSDesc{};
             VSDesc.Stage = RHI::RHIShaderStage::Vertex;
-            VSDesc.Bytecode = VSCodes;
+            VSDesc.Bytecode = std::move(VertexResult.Bytecode);
             VSDesc.EntryPoint = "MainVS";
             auto VS = Device->CreateShaderModule(VSDesc);
 
             RHI::RHIShaderModuleDesc FSDesc{};
             FSDesc.Stage = RHI::RHIShaderStage::Fragment;
-            FSDesc.Bytecode = FSCodes;
+            FSDesc.Bytecode = std::move(FragmentResult.Bytecode);
             FSDesc.EntryPoint = "MainFS";
             auto FS = Device->CreateShaderModule(FSDesc);
 
@@ -159,6 +145,7 @@ namespace Sora
 
     private:
         std::shared_ptr<RHI::RHIDevice> Device{ nullptr };
+        std::shared_ptr<SlangSubsystem> pSlangSubsystem{ nullptr };
         std::shared_ptr<RHI::RHIGraphicsPipeline> Pipeline{ nullptr };
     };
 }
@@ -167,8 +154,8 @@ SandboxApplication::SandboxApplication() {}
 
 SandboxApplication::~SandboxApplication() {}
 
-void SandboxApplication::OnRegisterSubsystems(Sora::SECI::SECISubsystemRegistry& InRegistry, std::shared_ptr<Sora::RHI::RHIDevice> InDevice) {
-    InRegistry.RegisterSubsystem<Sora::SandboxSubsystem>(InDevice);
+void SandboxApplication::OnRegisterSubsystems(Sora::SECI::SECISubsystemRegistry& InRegistry, std::shared_ptr<Sora::RHI::RHIDevice> InDevice, std::shared_ptr<Sora::SlangSubsystem> InSlangSubsystem) {
+    InRegistry.RegisterSubsystem<Sora::SandboxSubsystem>(InDevice, InSlangSubsystem);
 }
 
 Sora::Application* Sora::CreateApplication() {

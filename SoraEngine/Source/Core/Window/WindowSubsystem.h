@@ -49,12 +49,13 @@ namespace Sora
 			Dispatcher.Dispatch<SECI::WindowResizeEvent>([this](SECI::WindowResizeEvent& e) {
 				SORA_ENGINE_TRACE("WindowSubsystem, Window Resized: {0}x{1}", e.GetWidth(), e.GetHeight());
 				// Update internal cached dimensions or trigger graphics viewport updates if needed
-				return false; // Return false to let downstream layers (like UI/Renderers) also receive this event
+				return false;
 			});
 
 			// Handle Window Close
 			Dispatcher.Dispatch<SECI::WindowCloseEvent>([this](SECI::WindowCloseEvent& e) {
 				SORA_ENGINE_INFO("WindowSubsystem, Window close requested.");
+
 				// Handle any pre-shutdown cleanup or signal application exit
 
 				if (NativeWindow) {

@@ -9,6 +9,7 @@
 #include "Core/Application/ApplicationSubsystem.h"
 #include "Runtime/RHI/RHISubsystem.h"
 #include "Core/Window/WindowSubsystem.h"
+#include "Runtime/Slang/SlangSubsystem.h"
 
 #include <memory>
 
@@ -36,15 +37,16 @@ namespace Sora
         /**
          * @brief Override in Sandbox or Editor to register client-specific subsystems.
          */
-		virtual void OnRegisterSubsystems(SECI::SECISubsystemRegistry& InRegistry, std::shared_ptr<RHI::RHIDevice> InDevice) {}
+		virtual void OnRegisterSubsystems(SECI::SECISubsystemRegistry& InRegistry, std::shared_ptr<RHI::RHIDevice> InDevice, std::shared_ptr<SlangSubsystem> InSlangSubsystem) {}
 
     protected:
         std::unique_ptr<SECI::SECIEventBus> EventBus;
         SECI::SECISubsystemRegistry Registry;
 
-        std::shared_ptr<ApplicationSubsystem> AppSubsystem;
-        std::shared_ptr<WindowSubsystem> WinSubsystem;
-        std::shared_ptr<RHISubsystem> RhiSubsystem;
+        std::shared_ptr<ApplicationSubsystem> pAppSubsystem;
+        std::shared_ptr<WindowSubsystem> pWinSubsystem;
+        std::shared_ptr<RHISubsystem> pRhiSubsystem;
+        std::shared_ptr<SlangSubsystem> pSlangSubsystem;
 
 	};
 
