@@ -12,3 +12,4 @@ Logs/
 vcpkg_installed/
 
 Shaders/
+RuntimeSandbox/Shaders/
