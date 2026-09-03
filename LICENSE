@@ -1,37 +1,28 @@
-SORA INTERACTIVE PROPRIETARY COMMERCIAL LICENSE (SoraPCL-1)
-Version 1.0, Revision 0 — Drafted September 2nd, 2026 — Enforced as of September 2nd, 2026.
+SORA INTERACTIVE PROPRIETARY COMMERCIAL LICENSE (SoraPCL-1) — Version 1.0, Revision 0
 Copyright © 2026 Sora Interactive. All rights reserved.
 
-IMPORTANT : BY ACCESSING, COPYING, COMPILING, DECOMPILING, REVERSE ENGINEERING, OR USING THIS SOFTWARE IN ANY KIND (INCLUDING ITS SOURCE CODE, BINARIES, DECOMPILED ASSEMBLIES, SHADERS, AND ANY ASSOCIATED DOCUMENTATION), YOU AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE. SORA INTERACTIVE’S TOTAL AGGREGATE LIABILITY UNDER THIS AGREEMENT SHALL NOT EXCEED $10,000 USD, WHICHEVER IS GREATER.
+IMPORTANT : BY ACCESSING, COPYING, COMPILING, DECOMPILING, REVERSE ENGINEERING, OR USING THIS SOFTWARE IN ANY KIND (INCLUDING ITS SOURCE CODE, BINARIES, DECOMPILED ASSEMBLIES, SHADERS, AND ANY ASSOCIATED DOCUMENTATION), YOU AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE. SORA INTERACTIVE’S TOTAL AGGREGATE LIABILITY UNDER THIS AGREEMENT SHALL NOT EXCEED $10,000 USD.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS 
-FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL SORA INTERACTIVE 
-BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL SORA INTERACTIVE BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 1. Definitions
-    - "Licensor" means Sora Interactive solely.
-
-    - "Agreement" means this and any licenses under the SoraPCL classification individually or collectively, including any future or past versions, variants, or refactors.
-
-    - "Software" means any of the proprietary codebases, binaries, tools, assets, shaders (including any binaries, sources, and bytecode), and algorithms provided under this Agreement, including but not limited to SoraEngine, the Pseudo-Volumetric Ray Tracing (PVRT) system, the eXtended Pseudo-Volumetric Audio Propagation (xPVAP) system, and any associated components or binaries released under this Agreement.
-    
-    - "User" or "Licensee" means any individual or entity accessing or using this Software.
+    a. "Licensor" means Sora Interactive solely.
+    b. "Agreement" means this and any licenses under the SoraPCL classification individually or collectively, including any future or past versions, variants, or refactors.
+    c. "Software" means any of the proprietary codebases, binaries, tools, assets, shaders (including any binaries, sources, and bytecode), and algorithms provided under this Agreement, including but not limited to SoraEngine, the Pseudo-Volumetric Ray Tracing (PVRT) system, the eXtended Pseudo-Volumetric Audio Propagation (xPVAP) system, and any associated components or binaries released under this Agreement.
+    d. "User" or "Licensee" means any individual or entity accessing or using this Software.
 
 2. Ownership and Intellectual Property. This Software is licensed, not sold and does not transfer any ownership of its components or any derived sources, binaries, and components. All right, title, interest, and intellectual property rights in and to the Software—including any patents, copyrights, trademarks, trade secrets, designs, structures, and any underlying mathematical frameworks or algorithms associated with the Software—remain exclusively with and under Licensor.
 
 3. Grant of License and Restrictions. Subject to the terms and conditions of this Agreement, the Licensor grants the Licensee a limited, non-exclusive, non-transferable, non-sublicensable, and revocable license to download, install, or use the Software solely for the purposes explicitly authorized in writing by the Licensor, including as specified in any associated purchase, account dashboard, or written authorization. Under this Agreement, the User shall not, and shall not permit any third party to:
     a.  Distribute, sub-license, rent, lease, sell, host, or transfer the Software or any derivative works to any third party without explicit written consent from the Licensor.
     b.  Decompile, reverse engineer, disassemble, or attempt to derive the underlying trade secrets, algorithms, or components of any protected subsystems, except to the extent that such restriction is expressly prohibited by applicable law.
-    c.  Extract, isolate, or decouple engine algorithms or components to build, optimize, train, or benchmark competing standalone engines, middleware, software packages, artificial intelligence models, or developer tools.
+    c.  Extract, isolate, decouple, or utilize engine algorithms, source code, bytecode, shaders, structural designs, or outputs of the Software to build, optimize, fine-tune, benchmark, or train any software packages, developer tools, algorithms, or artificial intelligence models (including machine learning or generative models) for any purpose whatsoever.
     d.  Remove, alter, or obscure any copyright, trademark, or proprietary rights notices contained within the Software.
 
 4. Confidentiality and Trade Secrets. The source code, structural designs, system architectures, shader structures, mathematical logic, and components of the Software constitute valuable trade secrets and confidential information of the Licensor. The Licensee thus agrees to hold all such information in strict confidence and take all reasonable precautions to prevent unauthorized disclosure, unless expressly allowed by the Licensor.
 
 5. Termination. This license is effective until terminated. The Licensee's rights under this Agreement will terminate automatically without any notice from the Licensor if the Licensee fails to comply with any of its terms. Upon termination, the Licensee must immediately cease all use of the Software and destroy all copies, full or partial, in the Licensee's possession.
 
-6. This License shall be governed by and construed in accordance with the laws of the State of Delaware and applicable United States and international intellectual property laws, excluding its conflict of law principles. Any legal action arising under this Agreement shall be brought exclusively in the state or federal courts located in Saint Petersburg, Florida.
+6. Governing Law and Jurisdiction. This License shall be governed by and construed in accordance with the laws of the State of Delaware and applicable United States and international intellectual property laws, excluding its conflict of law principles. Any legal action arising under this Agreement shall be brought exclusively in the state or federal courts located in Saint Petersburg, Florida.
 
 For licensing inquiries or commercial permissions, please contact Sora Interactive.
