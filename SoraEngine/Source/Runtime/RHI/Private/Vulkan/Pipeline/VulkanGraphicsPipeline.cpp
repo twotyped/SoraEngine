@@ -7,9 +7,8 @@
 namespace Sora::RHI
 {
 
-		VulkanGraphicsPipeline::VulkanGraphicsPipeline(VkDevice InLogicalDevice, const RHIGraphicsPipelineDesc& InDesc)
-		: LogicalDevice(InLogicalDevice), Desc(InDesc)
-	{
+	VulkanGraphicsPipeline::VulkanGraphicsPipeline(VkDevice InLogicalDevice, const RHIGraphicsPipelineDesc& InDesc)
+	: LogicalDevice(InLogicalDevice), Desc(InDesc) {
 		if (!CreateDescriptorSetLayouts()) {
 			SORA_ENGINE_ERROR("VulkanGraphicsPipeline: failed to create descriptor set layouts!");
 			return;

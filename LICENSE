@@ -1,15 +1,15 @@
-SORA INTERACTIVE PROPRIETARY COMMERCIAL LICENSE (SoraPCL-1) — Version 1.0, Revision 0
+SORA INTERACTIVE PROPRIETARY COMMERCIAL LICENSE (SoraPCL-1) — Version 1, Revision 0
 Copyright © 2026 Sora Interactive. All rights reserved.
 
-IMPORTANT : BY ACCESSING, COPYING, COMPILING, DECOMPILING, REVERSE ENGINEERING, OR USING THIS SOFTWARE IN ANY KIND (INCLUDING ITS SOURCE CODE, BINARIES, DECOMPILED ASSEMBLIES, SHADERS, AND ANY ASSOCIATED DOCUMENTATION), YOU AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE. SORA INTERACTIVE’S TOTAL AGGREGATE LIABILITY UNDER THIS AGREEMENT SHALL NOT EXCEED $10,000 USD.
+BY DOWNLOADING, INSTALLING, ACCESSING, COMPILING, LINKING, OR OTHERWISE USING THIS SOFTWARE (INCLUDING ITS SOURCE CODE, BINARIES, SHADERS, AND ANY ASSOCIATED DOCUMENTATION), YOU AGREE TO BE BOUND BY THE TERMS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO THESE TERMS, DO NOT INSTALL, ACCESS, OR USE THE SOFTWARE.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL SORA INTERACTIVE BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 1. Definitions
-    a. "Licensor" means Sora Interactive solely.
-    b. "Agreement" means this and any licenses under the SoraPCL classification individually or collectively, including any future or past versions, variants, or refactors.
-    c. "Software" means any of the proprietary codebases, binaries, tools, assets, shaders (including any binaries, sources, and bytecode), and algorithms provided under this Agreement, including but not limited to SoraEngine, the Pseudo-Volumetric Ray Tracing (PVRT) system, the eXtended Pseudo-Volumetric Audio Propagation (xPVAP) system, and any associated components or binaries released under this Agreement.
-    d. "User" or "Licensee" means any individual or entity accessing or using this Software.
+    a. "Licensor" refers to Sora Interactive solely.
+    b. "Agreement" means this Sora Interactive Proprietary Commercial License (SoraPCL), as may be amended from time to time in accordance with Section 6.
+    c. "Software" refers to any of the proprietary codebases, binaries, tools, assets, shaders (including any binaries, sources, and bytecode), and algorithms provided under this Agreement, including but not limited to SoraEngine, the Pseudo-Volumetric Ray Tracing (PVRT) system, the eXtended Pseudo-Volumetric Audio Propagation (xPVAP) system, and any associated components or binaries released under this Agreement.
+    d. "User" or "Licensee" refers to any individual or entity accessing or using this Software.
 
 2. Ownership and Intellectual Property. This Software is licensed, not sold and does not transfer any ownership of its components or any derived sources, binaries, and components. All right, title, interest, and intellectual property rights in and to the Software—including any patents, copyrights, trademarks, trade secrets, designs, structures, and any underlying mathematical frameworks or algorithms associated with the Software—remain exclusively with and under Licensor.
 
@@ -23,6 +23,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 5. Termination. This license is effective until terminated. The Licensee's rights under this Agreement will terminate automatically without any notice from the Licensor if the Licensee fails to comply with any of its terms. Upon termination, the Licensee must immediately cease all use of the Software and destroy all copies, full or partial, in the Licensee's possession.
 
-6. Governing Law and Jurisdiction. This License shall be governed by and construed in accordance with the laws of the State of Delaware and applicable United States and international intellectual property laws, excluding its conflict of law principles. Any legal action arising under this Agreement shall be brought exclusively in the state or federal courts located in Saint Petersburg, Florida.
+6. Amendments and Modifications. The Licensor reserves the right to modify or update this Agreement upon thirty (30) days' prior written notice delivered via email or account dashboard notification. the Licensee's continued access to or use of the Software following the effective date of such updated terms shall constitute binding acceptance. If the Licensee objects to the updated terms, the Licensee's sole remedy is to terminate use of the Software prior to the effective date.
+
+7. Limitation of Liability. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL SORA INTERACTIVE BE LIABLE FOR ANY DAMAGES ARISING OUT OF OR IN CONNECTION WITH THIS AGREEMENT OR THE USE OF THE SOFTWARE. SORA INTERACTIVE’S TOTAL AGGREGATE LIABILITY UNDER THIS AGREEMENT, WHETHER IN CONTRACT, TORT (INCLUDING NEGLIGENCE), OR OTHERWISE, SHALL NOT EXCEED $10,000 USD.
+
+8. Governing Law and Jurisdiction.
+    - This License shall be governed by and construed in accordance with the laws of the State of Delaware and applicable United States and international intellectual property laws, excluding its conflict of law principles.
+    - Any legal action arising under this Agreement shall be brought exclusively in the state courts located in Pinellas County, Florida, or the United States District Court for the Middle District of Florida, Tampa Division.
+    - Each party hereby irrevocably submits to the exclusive jurisdiction of such courts, waives any objection to the laying of venue in such courts, and waives any claim that any such legal action brought in any such court has been brought in an inconvenient forum (forum non conveniens).
+    - Each party irrevocably waives any right to a trial by jury in any legal proceeding arising out of this agreement.
 
 For licensing inquiries or commercial permissions, please contact Sora Interactive.
