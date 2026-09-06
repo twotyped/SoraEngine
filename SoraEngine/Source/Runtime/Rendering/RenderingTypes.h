@@ -29,14 +29,14 @@ namespace Sora
 	using Quaternion = glm::quat;
 
 	struct alignas(16) UniformBufferObject {
-		Mat4 ViewMatrix;
-		Mat4 ProjectionMatrix;
-		Mat4 ViewProjectionMatrix;
+		alignas(16) Mat4 ViewMatrix;
+		alignas(16) Mat4 ProjectionMatrix;
+		alignas(16) Mat4 ViewProjectionMatrix;
 	};
 
 	inline Mat4 Perspective(float InFovRadians, float InAspect, float InZNear, float InZFar) {
 		Mat4 proj = glm::perspective(InFovRadians, InAspect, InZNear, InZFar);
-        proj[1][1] *= -1.0f; // for Vulkan
+        //proj[1][1] *= -1.0f; // for Vulkan
         return proj;
 	}
 

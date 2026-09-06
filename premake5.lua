@@ -50,7 +50,10 @@ project "SoraEngine"
     {
         "SORA_DYNAMIC_LINK",
         "SORA_BUILD_DLL",
-        "SORA_PLATFORM_WINDOWS"
+        "SORA_PLATFORM_WINDOWS",
+        "GLM_FORCE_RADIANS",
+        "GLM_FORCE_DEPTH_ZERO_TO_ONE",
+        "GLM_ENABLE_EXPERIMENTAL"
     }
 
     postbuildcommands {
@@ -111,7 +114,10 @@ project "RuntimeSandbox"
     defines
     {
         "SORA_DYNAMIC_LINK",
-        "SORA_PLATFORM_WINDOWS"
+        "SORA_PLATFORM_WINDOWS",
+        "GLM_FORCE_RADIANS",
+        "GLM_FORCE_DEPTH_ZERO_TO_ONE",
+        "GLM_ENABLE_EXPERIMENTAL"
     }
 
     postbuildcommands {

@@ -22,7 +22,7 @@ namespace Sora::RHI
 
 		if (Desc.CpuVisible) {
 			AllocCreateInfo.flags |= VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT;
-			AllocCreateInfo.flags |= VMA_ALLOCATION_CREATE_MAPPED_BIT;
+			AllocCreateInfo.flags |= VMA_ALLOCATION_CREATE_MAPPED_BIT; // Persistently mapped
 		}
 
 		VmaAllocationInfo AllocInfo{};
@@ -33,6 +33,7 @@ namespace Sora::RHI
 
 		MappedData = AllocInfo.pMappedData;
 		bIsMapped = (MappedData != nullptr);
+		bPersistentlyMapped = bIsMapped; // Track persistent mapping state
 	}
 
 	VulkanBuffer::~VulkanBuffer() {
@@ -55,7 +56,8 @@ namespace Sora::RHI
 	}
 
 	void VulkanBuffer::Unmap() {
-		if (bIsMapped && MappedData) {
+		// Do NOT unmap if VMA manages this persistently via VMA_ALLOCATION_CREATE_MAPPED_BIT
+		if (bIsMapped && MappedData && !bPersistentlyMapped) {
 			vmaUnmapMemory(Allocator, Allocation);
 			MappedData = nullptr;
 			bIsMapped = false;
@@ -73,11 +75,13 @@ namespace Sora::RHI
 
 	void VulkanBuffer::Cleanup() {
 		if (Buffer != VK_NULL_HANDLE && Allocator != VK_NULL_HANDLE) {
+			// vmaDestroyBuffer automatically handles unmapping persistently mapped buffers!
 			vmaDestroyBuffer(Allocator, Buffer, Allocation);
 			Buffer = VK_NULL_HANDLE;
 			Allocation = VK_NULL_HANDLE;
 			MappedData = nullptr;
 			bIsMapped = false;
+			bPersistentlyMapped = false;
 		}
 	}
 } // namespace Sora::RHI

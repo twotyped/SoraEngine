@@ -287,6 +287,47 @@ namespace Sora::RHI
 		vkCmdDrawIndexed(CommandBuffer, InIndexCount, InInstanceCount, InFirstIndex, InVertexOffset, InFirstInstance);
 	}
 
+	void VulkanCommandList::BindUniformBuffer(uint32_t InSet, uint32_t InBinding, std::shared_ptr<RHIBuffer> InBuffer) {
+		auto VkBuf = std::dynamic_pointer_cast<VulkanBuffer>(InBuffer);
+		if (!VkBuf) {
+			SORA_ENGINE_ERROR("BindUniformBuffer failed: InBuffer is null or not a valid VulkanBuffer!");
+			return;
+		}
+
+		if (CurrentPipelineLayout == VK_NULL_HANDLE) {
+			SORA_ENGINE_ERROR("BindUniformBuffer failed: No active pipeline layout! Call BindPipeline first.");
+			return;
+		}
+
+		VkDescriptorBufferInfo BufferInfo{};
+		BufferInfo.buffer = VkBuf->GetVkBuffer();
+		BufferInfo.offset = 0;
+		BufferInfo.range = VkBuf->GetDesc().Size;
+
+		VkWriteDescriptorSet DescriptorWrite{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
+		DescriptorWrite.dstBinding = InBinding;
+		DescriptorWrite.dstArrayElement = 0;
+		DescriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		DescriptorWrite.descriptorCount = 1;
+		DescriptorWrite.pBufferInfo = &BufferInfo;
+
+		// Load the push descriptor extension function directly from the device instance
+		static auto pfnCmdPushDescriptorSetKHR = (PFN_vkCmdPushDescriptorSetKHR)vkGetDeviceProcAddr(LogicalDevice, "vkCmdPushDescriptorSetKHR");
+		
+		if (pfnCmdPushDescriptorSetKHR) {
+			pfnCmdPushDescriptorSetKHR(
+				CommandBuffer, 
+				VK_PIPELINE_BIND_POINT_GRAPHICS, 
+				CurrentPipelineLayout, 
+				InSet, 
+				1, 
+				&DescriptorWrite
+			);
+		} else {
+			SORA_ENGINE_ERROR("BindUniformBuffer failed: VK_KHR_push_descriptor extension function not found.");
+		}
+	}
+
 	VkImageLayout VulkanCommandList::ConvertRHILayoutToVkLayout(RHITextureLayout InLayout) const {
 		switch (InLayout) {
 			case RHITextureLayout::Undefined:           return VK_IMAGE_LAYOUT_UNDEFINED;

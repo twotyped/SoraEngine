@@ -42,5 +42,6 @@ namespace Sora::RHI
 
 		void* MappedData{ nullptr };
 		bool bIsMapped{ false };
+		bool bPersistentlyMapped{ false };
 	};
 } // namespace Sora::RHI

@@ -68,6 +68,8 @@ namespace Sora::RHI
 		virtual void BindIndexBuffer(std::shared_ptr<RHIBuffer> buffer, uint64_t offset = 0) = 0;
 		virtual void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t firstVertex = 0, uint32_t firstInstance = 0) = 0;
 		virtual void DrawIndexed(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t firstIndex = 0, int32_t vertexOffset = 0, uint32_t firstInstance = 0) = 0;
+
+		virtual void BindUniformBuffer(uint32_t set, uint32_t binding, std::shared_ptr<RHIBuffer> buffer) = 0;
 	};
 
 } // namespace Sora::RHI

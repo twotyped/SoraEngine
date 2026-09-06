@@ -147,8 +147,10 @@ namespace Sora::RHI
 			QueueCreateInfos.push_back(QueueCreateInfo);
 		}
 
+		// Add VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME here
 		const std::vector<const char*> DeviceExtensions = {
-			VK_KHR_SWAPCHAIN_EXTENSION_NAME
+			VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+			VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
 		};
 
 		// Enable Dynamic Rendering & Sync2 for Vulkan 1.3
@@ -227,7 +229,18 @@ namespace Sora::RHI
 	}
 
 	std::shared_ptr<RHIBuffer> VulkanDevice::CreateBuffer(const RHIBufferDesc& InDesc) {
-		return std::make_shared<VulkanBuffer>(Allocator, LogicalDevice, InDesc, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+		VkBufferUsageFlags UsageFlags = 0;
+		const uint32_t DescUsage = static_cast<uint32_t>(InDesc.Usage);
+
+		if (DescUsage & static_cast<uint32_t>(RHIBufferUsage::VertexBuffer))  UsageFlags |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+		if (DescUsage & static_cast<uint32_t>(RHIBufferUsage::IndexBuffer))   UsageFlags |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+		if (DescUsage & static_cast<uint32_t>(RHIBufferUsage::UniformBuffer)) UsageFlags |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+
+		if (UsageFlags == 0) {
+			UsageFlags = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+		}
+
+		return std::make_shared<VulkanBuffer>(Allocator, LogicalDevice, InDesc, UsageFlags);
 	}
 
 	std::shared_ptr<RHITexture> VulkanDevice::CreateTexture(const RHITextureDesc& InDesc) {
@@ -257,22 +270,52 @@ namespace Sora::RHI
 	}
 
 	void VulkanDevice::Shutdown() {
-		WaitIdle();
+		if (LogicalDevice != VK_NULL_HANDLE) {
+			vkDeviceWaitIdle(LogicalDevice);
+		}
 
 		if (Swapchain) {
 			Swapchain.reset();
 		}
 
 		for (size_t i = 0; i < MaxFramesInFlight; ++i) {
-			if (i < ImageAvailableSemaphores.size() && ImageAvailableSemaphores[i]) vkDestroySemaphore(LogicalDevice, ImageAvailableSemaphores[i], nullptr);
-			if (i < RenderFinishedSemaphores.size() && RenderFinishedSemaphores[i]) vkDestroySemaphore(LogicalDevice, RenderFinishedSemaphores[i], nullptr);
-			if (i < FrameInFlightFences.size() && FrameInFlightFences[i]) vkDestroyFence(LogicalDevice, FrameInFlightFences[i], nullptr);
+			if (i < ImageAvailableSemaphores.size() && ImageAvailableSemaphores[i]) {
+				vkDestroySemaphore(LogicalDevice, ImageAvailableSemaphores[i], nullptr);
+			}
+			if (i < RenderFinishedSemaphores.size() && RenderFinishedSemaphores[i]) {
+				vkDestroySemaphore(LogicalDevice, RenderFinishedSemaphores[i], nullptr);
+			}
+			if (i < FrameInFlightFences.size() && FrameInFlightFences[i]) {
+				vkDestroyFence(LogicalDevice, FrameInFlightFences[i], nullptr);
+			}
+		}
+		ImageAvailableSemaphores.clear();
+		RenderFinishedSemaphores.clear();
+		FrameInFlightFences.clear();
+
+		if (CommandPool) {
+			vkDestroyCommandPool(LogicalDevice, CommandPool, nullptr);
+			CommandPool = VK_NULL_HANDLE;
 		}
 
-		if (CommandPool) vkDestroyCommandPool(LogicalDevice, CommandPool, nullptr);
-		if (Allocator) vmaDestroyAllocator(Allocator);
-		if (LogicalDevice) vkDestroyDevice(LogicalDevice, nullptr);
-		if (Surface) vkDestroySurfaceKHR(Instance, Surface, nullptr);
-		if (Instance) vkDestroyInstance(Instance, nullptr);
+		if (Allocator) {
+			vmaDestroyAllocator(Allocator);
+			Allocator = VK_NULL_HANDLE;
+		}
+
+		if (LogicalDevice) {
+			vkDestroyDevice(LogicalDevice, nullptr);
+			LogicalDevice = VK_NULL_HANDLE;
+		}
+
+		if (Surface) {
+			vkDestroySurfaceKHR(Instance, Surface, nullptr);
+			Surface = VK_NULL_HANDLE;
+		}
+
+		if (Instance) {
+			vkDestroyInstance(Instance, nullptr);
+			Instance = VK_NULL_HANDLE;
+		}
 	}
 } // namespace Sora::RHI

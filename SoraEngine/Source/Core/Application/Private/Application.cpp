@@ -18,7 +18,7 @@ namespace Sora
 		pWinSubsystem = Registry.RegisterSubsystem<WindowSubsystem>(EventBus.get(), WindowProperties("SoraEngine: RuntimeSandbox", 1280, 720));
 		pVfsSubsystem = Registry.RegisterSubsystem<VFSSubsystem>();
 		pSlangSubsystem = Registry.RegisterSubsystem<SlangSubsystem>(EventBus.get(), pVfsSubsystem, ShaderTargetAPI::SPIRV);
-
+		
 		if (pWinSubsystem && !Registry.InitializeSubsystem(pWinSubsystem.get())) {
 			SORA_ENGINE_ERROR("Failed to initialize WindowSubsystem!");
 			return false;
@@ -36,7 +36,12 @@ namespace Sora
 			return false;
 		}
 
-		OnRegisterSubsystems(Registry, pRhiSubsystem->GetDevice(), pSlangSubsystem);
+		Rendering::CameraDesc CameraDesc{};
+		std::unique_ptr<Rendering::Camera> Camera = std::make_unique<Rendering::Camera>(CameraDesc);
+		
+		pRenderingSubsystem = Registry.RegisterSubsystem<RenderingSubsystem>(EventBus.get(), pRhiSubsystem->GetDevice(), std::move(Camera));
+
+		OnRegisterSubsystems(Registry, pRhiSubsystem->GetDevice(), pSlangSubsystem, pRenderingSubsystem);
 
 		return Registry.InitializeAll();
 	}

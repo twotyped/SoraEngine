@@ -2,21 +2,20 @@
 
 #include "Runtime/Rendering/RenderingTypes.h"
 #include "Runtime/RHI/Public/RHIDevice.h"
-#include <memory>
 
 namespace Sora::Rendering
 {
 
 	struct CameraDesc {
 		float FOV = 60.0f;
-		float AspectRatio = 16.0f / 9.0f;
+		float AspectRatio = 1280.0f / 780.0f;
 		float NearPlane = 0.1f;
 		float FarPlane = 1000.0f;
 	};
 
 	class Camera {
 	public:
-		explicit Camera(CameraDesc InCameraDesc) : Desc(InCameraDesc) {}
+		explicit Camera(CameraDesc& InCameraDesc) : Desc(InCameraDesc) {}
 		~Camera() = default;
 
 		void SetPosition(const Vec3& InPosition) {
@@ -94,13 +93,13 @@ namespace Sora::Rendering
 				Mat4 Translation = glm::translate(Mat4(1.0f), -Position);
 				Mat4 Rotation = glm::toMat4(glm::conjugate(Orientation));
 
-				UBO.ViewMatrix = Rotation * Translation;
+				UBO.ViewMatrix = Translation * Rotation;
 				bViewDirty = false;
 			}
 
 			if (bProjectionDirty) {
 				UBO.ProjectionMatrix = Perspective(glm::radians(Desc.FOV), Desc.AspectRatio, Desc.NearPlane, Desc.FarPlane);
-				UBO.ProjectionMatrix[1][1] *= -1.0f; // TODO: Make this platform-agnostic for Vulkan, DirectX, and Metal later.
+				//UBO.ProjectionMatrix[1][1] *= -1.0f; // TODO: make this platform-agnostic for Vulkan, DirectX, and Metal later.
 				bProjectionDirty = false;
 			}
 

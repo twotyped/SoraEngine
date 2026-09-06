@@ -38,6 +38,8 @@ namespace Sora::RHI
 			virtual void DrawIndexed(uint32_t InIndexCount, uint32_t InInstanceCount = 1, uint32_t InFirstIndex = 0, int32_t InVertexOffset = 0, uint32_t InFirstInstance = 0) override;
 	 
 			VkCommandBuffer GetVkCommandBuffer() const { return CommandBuffer; }
+
+			virtual void BindUniformBuffer(uint32_t InSet, uint32_t InBinding, std::shared_ptr<RHIBuffer> InBuffer) override;
 	 
 		private:
 			VkImageLayout ConvertRHILayoutToVkLayout(RHITextureLayout InLayout) const;
