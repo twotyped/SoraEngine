@@ -43,6 +43,8 @@ namespace Sora::RHI
 			}
  
 			VkDescriptorSetLayoutCreateInfo LayoutInfo{ VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO };
+			// Enable push descriptor flag so we can use vkCmdPushDescriptorSetKHR when binding UBOs
+			LayoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR;
 			LayoutInfo.bindingCount = static_cast<uint32_t>(VkBindings.size());
 			LayoutInfo.pBindings = VkBindings.data();
  

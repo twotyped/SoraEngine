@@ -93,7 +93,7 @@ namespace Sora::Rendering
 				Mat4 Translation = glm::translate(Mat4(1.0f), -Position);
 				Mat4 Rotation = glm::toMat4(glm::conjugate(Orientation));
 
-				UBO.ViewMatrix = Translation * Rotation;
+				UBO.ViewMatrix = Rotation * Translation;
 				bViewDirty = false;
 			}
 

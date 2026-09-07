@@ -175,42 +175,23 @@ namespace Sora
         virtual void OnUpdate(float deltaTime) override {
 			if (!Device || !Pipeline) return;
 
-			//if (auto* Camera = pRenderingSubsystem->GetActiveCamera()) {
-			//	static float Angle = 0.0f;
-			//	Angle += deltaTime * 0.8f;
-
-			//	float Radius = 3.0f;
-			//	Vec3 CamPos = Vec3(std::sin(Angle) * Radius, 1.5f, std::cos(Angle) * Radius);
-			//	Camera->SetPosition(CamPos);
-
-			//	Vec3 TargetDir = glm::normalize(Vec3(0.0f) - CamPos);
-			//	
-			//	// Pitch: angle from XZ plane
-			//	float Pitch = glm::degrees(std::asin(TargetDir.y));
-			//	
-			//	// Yaw: atan2(-TargetDir.x, -TargetDir.z) points down negative Z (Camera Forward)
-			//	float Yaw = glm::degrees(std::atan2(-TargetDir.x, -TargetDir.z));
-			//	
-			//	Camera->SetOrientation(Pitch, Yaw);
-			//}
-
 			if (auto* Camera = pRenderingSubsystem->GetActiveCamera()) {
-				// 1. Force the position and orientation directly
-				Camera->SetPosition(glm::vec3(0.0f, 2.0f, -5.0f));
-				Camera->SetOrientation(-20.0f, 0.0f);
+				static float Angle = 0.0f;
+				Angle += deltaTime * 0.8f;
 
-				// 2. FORCE THE CAMERA TO CALCULATE THE MATRICES NOW
-				Camera->UpdateUBO(); 
+				float Radius = 3.0f;
+				Vec3 CamPos = Vec3(std::sin(Angle) * Radius, -1.5f, std::cos(Angle) * Radius - 1.5);
+				Camera->SetPosition(CamPos);
 
-				// 3. FORCE THE NEW DATA INTO THE GPU UNIFORM BUFFER MANUALLY
-				auto CameraUbo = pRenderingSubsystem->GetCameraUBO();
-				if (CameraUbo) {
-					void* Mapped = CameraUbo->Map();
-					if (Mapped) {
-						std::memcpy(Mapped, &Camera->GetUBO(), sizeof(UniformBufferObject));
-						CameraUbo->Unmap(); // Make sure to unmap if required by your RHI
-					}
-				}
+				Vec3 TargetDir = glm::normalize(Vec3(0.0f) - CamPos);
+				
+				// Pitch: angle from XZ plane
+				float Pitch = glm::degrees(std::asin(TargetDir.y));
+				
+				// Yaw: atan2(-TargetDir.x, -TargetDir.z) points down negative Z (Camera Forward)
+				float Yaw = glm::degrees(std::atan2(-TargetDir.x, -TargetDir.z));
+				
+				Camera->SetOrientation(Pitch, Yaw);
 			}
 
 			auto Swapchain = Device->GetSwapchain();
@@ -257,6 +238,60 @@ namespace Sora
             CmdList->BindPipeline(Pipeline);
 
             CmdList->BindVertexBuffer(VertexBuffer, 0);
+
+            //if (VertexBuffer) {
+            //    if (auto* Camera = pRenderingSubsystem->GetActiveCamera()) {
+            //        const auto VP = Camera->GetViewProjectionMatrix();
+            //        std::vector<Vertex3D> Transformed;
+            //        Transformed.reserve(g_CubeVertices.size());
+            //        for (const auto& V : g_CubeVertices) {
+            //            glm::vec4 Clip = VP * glm::vec4(V.Position, 1.0f);
+            //            // Perform perspective divide to get NDC coordinates
+            //            glm::vec3 NDC = glm::vec3(Clip) / Clip.w;
+            //            Transformed.push_back(Vertex3D{ { NDC.x, NDC.y, NDC.z }, V.Color });
+            //        }
+
+            //        void* MappedVerts = VertexBuffer->Map();
+            //        if (MappedVerts) {
+            //            std::memcpy(MappedVerts, Transformed.data(), Transformed.size() * sizeof(Vertex3D));
+            //            VertexBuffer->Unmap();
+            //        }
+            //    }
+            //}
+
+			//if (VertexBuffer) {
+			//	if (auto* Camera = pRenderingSubsystem->GetActiveCamera()) {
+			//		static int FrameCounter = 0;
+			//		if (FrameCounter++ % 60 == 0) { // Log once every 60 frames (~1 second)
+			//			const auto VP = Camera->GetViewProjectionMatrix();
+
+			//			SORA_CLIENT_INFO("================= FRAME DEBUG PRINT =================");
+			//			SORA_CLIENT_INFO("Camera Pos: ({}, {}, {})", Camera->GetPosition().x, Camera->GetPosition().y, Camera->GetPosition().z);
+
+			//			// Log ViewProjection Matrix Rows
+			//			SORA_CLIENT_INFO("VP Matrix Row 0: [{:.2f}, {:.2f}, {:.2f}, {:.2f}]", VP[0][0], VP[1][0], VP[2][0], VP[3][0]);
+			//			SORA_CLIENT_INFO("VP Matrix Row 1: [{:.2f}, {:.2f}, {:.2f}, {:.2f}]", VP[0][1], VP[1][1], VP[2][1], VP[3][1]);
+			//			SORA_CLIENT_INFO("VP Matrix Row 2: [{:.2f}, {:.2f}, {:.2f}, {:.2f}]", VP[0][2], VP[1][2], VP[2][2], VP[3][2]);
+			//			SORA_CLIENT_INFO("VP Matrix Row 3: [{:.2f}, {:.2f}, {:.2f}, {:.2f}]", VP[0][3], VP[1][3], VP[2][3], VP[3][3]);
+
+			//			for (size_t i = 0; i < 3; ++i) { // Print first 3 vertices
+			//				glm::vec4 LocalPos = glm::vec4(g_CubeVertices[i].Position, 1.0f);
+			//				glm::vec4 ClipPos = VP * LocalPos;
+
+			//				SORA_CLIENT_INFO("Vertex [{}] In Pos: ({:.2f}, {:.2f}, {:.2f})", i, LocalPos.x, LocalPos.y, LocalPos.z);
+			//				SORA_CLIENT_INFO("  -> Clip Pos (x, y, z, w): ({:.2f}, {:.2f}, {:.2f}, {:.2f})", ClipPos.x, ClipPos.y, ClipPos.z, ClipPos.w);
+
+			//				if (ClipPos.w != 0.0f) {
+			//					glm::vec3 NDC = glm::vec3(ClipPos) / ClipPos.w;
+			//					SORA_CLIENT_INFO("  -> NDC Pos (x, y, z): ({:.2f}, {:.2f}, {:.2f})", NDC.x, NDC.y, NDC.z);
+			//				} else {
+			//					SORA_CLIENT_ERROR("  -> Clip.w is ZERO! Division by zero imminent.");
+			//				}
+			//			}
+			//			SORA_CLIENT_INFO("====================================================");
+			//		}
+			//	}
+			//}
 
             if (pRenderingSubsystem && pRenderingSubsystem->GetCameraUBO()) {
 				CmdList->BindUniformBuffer(0, 0, pRenderingSubsystem->GetCameraUBO()); 
