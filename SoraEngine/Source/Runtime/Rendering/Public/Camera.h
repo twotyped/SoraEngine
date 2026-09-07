@@ -13,98 +13,43 @@ namespace Sora::Rendering
 		float FarPlane = 1000.0f;
 	};
 
-	class Camera {
+	class SORA_API Camera {
 	public:
 		explicit Camera(CameraDesc& InCameraDesc) : Desc(InCameraDesc) {}
 		~Camera() = default;
 
-		void SetPosition(const Vec3& InPosition) {
-			Position = InPosition;
-			bViewDirty = true;
-		}
+		void SetPosition(const Vec3& InPosition);
+		void Move(const Vec3& InTranslation);
 
-		void Move(const Vec3& InTranslation) {
-			Position += InTranslation;
-			bViewDirty = true;
-		}
+		// Euler Angles
+		void SetOrientation(float InPitchDegrees, float InYawDegrees, float InRollDegrees = 0.0f);
+		void Rotate(float InPitchDegrees, float InYawDegrees, float InRollDegrees = 0.0f);
 
-		void SetOrientation(float InPitchDegrees, float InYawDegrees, float InRollDegrees = 0.0f) {
-			Quaternion qPitch = glm::angleAxis(glm::radians(InPitchDegrees), Vec3(1.0f, 0.0f, 0.0f));
-			Quaternion qYaw   = glm::angleAxis(glm::radians(InYawDegrees),   Vec3(0.0f, 1.0f, 0.0f));
-			Quaternion qRoll  = glm::angleAxis(glm::radians(InRollDegrees),  Vec3(0.0f, 0.0f, 1.0f));
-			
-			Orientation = glm::normalize(qYaw * qPitch * qRoll);
-			bViewDirty = true;
-		}
+		// Quaternion Angles
+		void SetOrientation(const Quaternion& InOrientation);
+		void Rotate(const Quaternion& InDeltaRotation);
 
-		void Rotate(float InPitchDegrees, float InYawDegrees, float InRollDegrees = 0.0f) {
-			Quaternion qPitch = glm::angleAxis(glm::radians(InPitchDegrees), GetRightVector());
-			Quaternion qYaw   = glm::angleAxis(glm::radians(InYawDegrees),   Vec3(0.0f, 1.0f, 0.0f));
-			
-			Orientation = glm::normalize(qYaw * qPitch * Orientation);
-			bViewDirty = true;
-		}
+		void SetPerspective(float InFovDegrees, float InAspectRatio, float InNearPlane, float InFarPlane);
 
-		void SetPerspective(float InFovDegrees, float InAspectRatio, float InNearPlane, float InFarPlane) {
-			Desc.FOV = InFovDegrees;
-			Desc.AspectRatio = InAspectRatio;
-			Desc.NearPlane = InNearPlane;
-			Desc.FarPlane = InFarPlane;
-			bProjectionDirty = true;
-		}
+		void SetAspectRatio(float InAspectRatio);
 
-		void SetAspectRatio(float InAspectRatio) {
-			Desc.AspectRatio = InAspectRatio;
-			bProjectionDirty = true;
-		}
+		const Mat4& GetViewMatrix() const;
 
-		const Mat4& GetViewMatrix() const {
-			UpdateUBO();
-			return UBO.ViewMatrix;
-		}
+		const Mat4& GetProjectionMatrix() const;
 
-		const Mat4& GetProjectionMatrix() const {
-			UpdateUBO();
-			return UBO.ProjectionMatrix;
-		}
+		const Mat4& GetViewProjectionMatrix() const;
 
-		const Mat4& GetViewProjectionMatrix() const {
-			UpdateUBO();
-			return UBO.ViewProjectionMatrix;
-		}
+		const UniformBufferObject& GetUBO() const;
 
-		const UniformBufferObject& GetUBO() const {
-			UpdateUBO();
-			return UBO;
-		}
+		inline Vec3 GetForwardVector() const { return glm::rotate(Orientation, Vec3(0.0f, 0.0f, -1.0f)); }
+		inline Vec3 GetUpVector() const      { return glm::rotate(Orientation, Vec3(0.0f, 1.0f, 0.0f)); }
+		inline Vec3 GetRightVector() const   { return glm::rotate(Orientation, Vec3(1.0f, 0.0f, 0.0f)); }
+		inline Vec3 GetPosition() const      { return Position; }
+		inline const CameraDesc& GetDesc() const	 { return Desc; }
 
-		Vec3 GetForwardVector() const { return glm::rotate(Orientation, Vec3(0.0f, 0.0f, -1.0f)); }
-		Vec3 GetUpVector() const      { return glm::rotate(Orientation, Vec3(0.0f, 1.0f, 0.0f)); }
-		Vec3 GetRightVector() const   { return glm::rotate(Orientation, Vec3(1.0f, 0.0f, 0.0f)); }
-		Vec3 GetPosition() const      { return Position; }
-		const CameraDesc& GetDesc() const	 { return Desc; }
+		void UpdateUBO() const;
 
-		void UpdateUBO() const {
-			if (!bViewDirty && !bProjectionDirty) {
-				return;
-			}
-
-			if (bViewDirty) {
-				Mat4 Translation = glm::translate(Mat4(1.0f), -Position);
-				Mat4 Rotation = glm::toMat4(glm::conjugate(Orientation));
-
-				UBO.ViewMatrix = Rotation * Translation;
-				bViewDirty = false;
-			}
-
-			if (bProjectionDirty) {
-				UBO.ProjectionMatrix = Perspective(glm::radians(Desc.FOV), Desc.AspectRatio, Desc.NearPlane, Desc.FarPlane);
-				//UBO.ProjectionMatrix[1][1] *= -1.0f; // TODO: make this platform-agnostic for Vulkan, DirectX, and Metal later.
-				bProjectionDirty = false;
-			}
-
-			UBO.ViewProjectionMatrix = UBO.ProjectionMatrix * UBO.ViewMatrix;
-		}
+		void LookAt(const Vec3& InTarget, const Vec3& InUp = Vec3(0.0f, 1.0f, 0.0f));
 		
 	private:
 		Vec3 Position{ 0.0f, 0.0f, 0.0f };

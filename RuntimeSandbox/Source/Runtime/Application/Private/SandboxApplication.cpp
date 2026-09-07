@@ -180,18 +180,13 @@ namespace Sora
 				Angle += deltaTime * 0.8f;
 
 				float Radius = 3.0f;
-				Vec3 CamPos = Vec3(std::sin(Angle) * Radius, -1.5f, std::cos(Angle) * Radius - 1.5);
+
+				Vec3 CamPos = Vec3(std::sin(Angle) * Radius, 1.5f, std::cos(Angle) * Radius - 1.5f);
 				Camera->SetPosition(CamPos);
 
-				Vec3 TargetDir = glm::normalize(Vec3(0.0f) - CamPos);
-				
-				// Pitch: angle from XZ plane
-				float Pitch = glm::degrees(std::asin(TargetDir.y));
-				
-				// Yaw: atan2(-TargetDir.x, -TargetDir.z) points down negative Z (Camera Forward)
-				float Yaw = glm::degrees(std::atan2(-TargetDir.x, -TargetDir.z));
-				
-				Camera->SetOrientation(Pitch, Yaw);
+				Camera->LookAt(Vec3(0.0f, 0.0f, 0.0f));
+
+				Camera->UpdateUBO();
 			}
 
 			auto Swapchain = Device->GetSwapchain();

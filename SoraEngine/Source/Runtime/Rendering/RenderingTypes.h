@@ -36,7 +36,7 @@ namespace Sora
 
 	inline Mat4 Perspective(float InFovRadians, float InAspect, float InZNear, float InZFar) {
 		Mat4 proj = glm::perspective(InFovRadians, InAspect, InZNear, InZFar);
-        //proj[1][1] *= -1.0f; // for Vulkan
+        proj[1][1] *= -1.0f; // for Vulkan
         return proj;
 	}
 
