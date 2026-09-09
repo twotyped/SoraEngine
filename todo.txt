@@ -2,13 +2,13 @@ x Use Vulkan to create a basic RGB triangle.
 x Implement Slang Shader Language and create a Slang Subsystem
 x Implement a basic Virtual File System (VFS)
 x Update the Depth Stencil in the Pipeline
-Create a Rendering subsystem with at least simple Camera and Entity classes
-Extend and refine the Input subsystem
+x Create a Rendering subsystem with at least simple Camera
+Create a basic high-level Input subsystem.
 In the SandboxRuntime, use the Input subsystem to move the camera using WASD and mouse.
+Implement a basic Entity and Scene Graph system within the Rendering Subsystem.
 
 Unordered Blocks
-1. 3D Mathematics & Depth Pipeline Update
-2. Slang Native Shader Compilation & VFS Integration
-3. Textures, Models, and the World Graph
-4. The Global Audio Output System
-5. The Sora Engine Editor Application
+1. Slang Native Shader Compilation & VFS Integration
+2. Textures, Models, and the World Graph
+3. The Global Audio Output System
+4. The Sora Engine Editor Application
