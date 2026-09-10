@@ -85,6 +85,14 @@ namespace Sora
 			return handle;
 		}
 
+		void ModifyCursorVisibility(bool InCursorVisible) {
+			NativeWindow->ModifyCursorVisibility(InCursorVisible);
+		}
+
+		void ModifyCursorClipping(bool InCursorClipped) {
+			NativeWindow->ModifyCursorClipping(InCursorClipped);
+		}
+
 	private:
 		SECI::SECIEventBus* EventBus{ nullptr };
 		WindowProperties Properties;

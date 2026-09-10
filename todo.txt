@@ -1,5 +1,3 @@
-x Use Vulkan to create a basic RGB triangle.
-x Implement Slang Shader Language and create a Slang Subsystem
 x Implement a basic Virtual File System (VFS)
 x Update the Depth Stencil in the Pipeline
 x Create a Rendering subsystem with at least simple Camera

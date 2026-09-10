@@ -4,6 +4,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <hidusage.h>
 
 namespace Sora
 {
@@ -27,6 +28,10 @@ namespace Sora
 
         virtual void Shutdown() override;
 
+        virtual void ModifyCursorVisibility(bool InCursorVisible) override;
+        virtual void ModifyCursorClipping(bool InCursorClipped) override;
+        virtual void CenterCursor() override;
+
     private:
         virtual void Initialize(const WindowProperties& InProps);
 
@@ -42,6 +47,8 @@ namespace Sora
             uint32_t Width = 0;
             uint32_t Height = 0;
             bool VSync = false;
+            bool CursorVisible = true;
+            bool CursorClipped = false;
 
             EventCallbackFn EventCallback;
         };

@@ -12,6 +12,7 @@
 #include "Runtime/Slang/SlangSubsystem.h"
 #include "Core/VFS/VFSSubsystem.h"
 #include "Runtime/Rendering/RenderingSubsystem.h"
+#include "Core/Input/InputSubsystem.h"
 
 #include <memory>
 
@@ -39,7 +40,7 @@ namespace Sora
         /**
          * @brief Override in Sandbox or Editor to register client-specific subsystems.
          */
-		virtual void OnRegisterSubsystems(SECI::SECISubsystemRegistry& InRegistry, std::shared_ptr<RHI::RHIDevice> InDevice, std::shared_ptr<SlangSubsystem> InSlangSubsystem, std::shared_ptr<RenderingSubsystem> InRenderingSubsystem) {}
+		virtual void OnRegisterSubsystems(Sora::SECI::SECISubsystemRegistry& InRegistry, std::shared_ptr<Sora::RHI::RHIDevice> InDevice, std::shared_ptr<Sora::SlangSubsystem> InSlangSubsystem, std::shared_ptr<Sora::RenderingSubsystem> InRenderingSubsystem, std::shared_ptr<Sora::InputSubsystem> InInputSubsystem, std::shared_ptr<Sora::WindowSubsystem> InWindowSubsystem) {}
 
     protected:
         std::unique_ptr<SECI::SECIEventBus> EventBus;
@@ -51,6 +52,7 @@ namespace Sora
         std::shared_ptr<VFSSubsystem> pVfsSubsystem;
         std::shared_ptr<SlangSubsystem> pSlangSubsystem;
         std::shared_ptr<RenderingSubsystem> pRenderingSubsystem;
+        std::shared_ptr<InputSubsystem> pInputSubsystem;
 
 	};
 

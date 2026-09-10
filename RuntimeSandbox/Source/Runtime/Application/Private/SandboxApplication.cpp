@@ -12,6 +12,7 @@
 #include <Runtime/Rendering/RenderingTypes.h>
 #include <Runtime/Rendering/Public/Camera.h>
 #include <Runtime/RHI/Public/RHIBuffer.h>
+#include <Core/SECI/EventLayer/Public/Events/KeyEvent.h>
 #include <filesystem>
 #include <iostream>
 
@@ -76,8 +77,8 @@ namespace Sora
     class SandboxSubsystem : public SECI::SECISubsystem {
     public:
         SandboxSubsystem() = default;
-		explicit SandboxSubsystem(std::shared_ptr<RHI::RHIDevice> InDevice, std::shared_ptr<SlangSubsystem> InSlangSubsystem, std::shared_ptr<RenderingSubsystem> InRenderingSubsystem)
-            : Device(InDevice), pSlangSubsystem(InSlangSubsystem), pRenderingSubsystem(InRenderingSubsystem) {}
+		explicit SandboxSubsystem(std::shared_ptr<RHI::RHIDevice> InDevice, std::shared_ptr<SlangSubsystem> InSlangSubsystem, std::shared_ptr<RenderingSubsystem> InRenderingSubsystem, std::shared_ptr<InputSubsystem> InInputSubsystem, std::shared_ptr<WindowSubsystem> InWindowSubsystem)
+            : Device(InDevice), pSlangSubsystem(InSlangSubsystem), pRenderingSubsystem(InRenderingSubsystem), pInputSubsystem(InInputSubsystem), pWindowSubsystem(InWindowSubsystem) {}
 
         virtual ~SandboxSubsystem() override = default;
 
@@ -168,6 +169,14 @@ namespace Sora
 
             Pipeline = Device->CreateGraphicsPipeline(PipelineDesc);
 
+            pInputSubsystem->BindAction("MoveForward", Key::W);
+            pInputSubsystem->BindAction("MoveBackward", Key::S);
+            pInputSubsystem->BindAction("MoveLeft", Key::A);
+            pInputSubsystem->BindAction("MoveRight", Key::D);
+
+            pWindowSubsystem->ModifyCursorVisibility(false);
+            pWindowSubsystem->ModifyCursorClipping(true);
+
             SORA_CLIENT_INFO("SandboxSubsystem initialized!");
             return true;
         }
@@ -175,19 +184,26 @@ namespace Sora
         virtual void OnUpdate(float deltaTime) override {
 			if (!Device || !Pipeline) return;
 
-			if (auto* Camera = pRenderingSubsystem->GetActiveCamera()) {
-				static float Angle = 0.0f;
-				Angle += deltaTime * 0.8f;
+            if (auto* Camera = pRenderingSubsystem->GetActiveCamera()) {
+                float deltaX = pInputSubsystem->GetAndResetMouseDeltaX();
+				float deltaY = pInputSubsystem->GetAndResetMouseDeltaY();
 
-				float Radius = 3.0f;
+				if (deltaX != 0.0f || deltaY != 0.0f) {
+                    Camera->Rotate(deltaY * 0.1f, deltaX * 0.1f);
+                }
 
-				Vec3 CamPos = Vec3(std::sin(Angle) * Radius, 1.5f, std::cos(Angle) * Radius - 1.5f);
-				Camera->SetPosition(CamPos);
+                Vec3 moveDir(0.0f);
+				if (pInputSubsystem->IsActionActive("MoveForward"))  moveDir.z -= 1.0f;
+				if (pInputSubsystem->IsActionActive("MoveBackward")) moveDir.z += 1.0f;
+				if (pInputSubsystem->IsActionActive("MoveLeft"))     moveDir.x -= 1.0f;
+				if (pInputSubsystem->IsActionActive("MoveRight"))    moveDir.x += 1.0f;
 
-				Camera->LookAt(Vec3(0.0f, 0.0f, 0.0f));
+                if (moveDir.x != 0.0f || moveDir.y != 0.0f || moveDir.z != 0.0f) {
+					Camera->Move(moveDir * 2.0f * deltaTime);
+				}
 
-				Camera->UpdateUBO();
-			}
+                Camera->UpdateUBO();
+            }
 
 			auto Swapchain = Device->GetSwapchain();
 			if (!Swapchain) {
@@ -234,60 +250,6 @@ namespace Sora
 
             CmdList->BindVertexBuffer(VertexBuffer, 0);
 
-            //if (VertexBuffer) {
-            //    if (auto* Camera = pRenderingSubsystem->GetActiveCamera()) {
-            //        const auto VP = Camera->GetViewProjectionMatrix();
-            //        std::vector<Vertex3D> Transformed;
-            //        Transformed.reserve(g_CubeVertices.size());
-            //        for (const auto& V : g_CubeVertices) {
-            //            glm::vec4 Clip = VP * glm::vec4(V.Position, 1.0f);
-            //            // Perform perspective divide to get NDC coordinates
-            //            glm::vec3 NDC = glm::vec3(Clip) / Clip.w;
-            //            Transformed.push_back(Vertex3D{ { NDC.x, NDC.y, NDC.z }, V.Color });
-            //        }
-
-            //        void* MappedVerts = VertexBuffer->Map();
-            //        if (MappedVerts) {
-            //            std::memcpy(MappedVerts, Transformed.data(), Transformed.size() * sizeof(Vertex3D));
-            //            VertexBuffer->Unmap();
-            //        }
-            //    }
-            //}
-
-			//if (VertexBuffer) {
-			//	if (auto* Camera = pRenderingSubsystem->GetActiveCamera()) {
-			//		static int FrameCounter = 0;
-			//		if (FrameCounter++ % 60 == 0) { // Log once every 60 frames (~1 second)
-			//			const auto VP = Camera->GetViewProjectionMatrix();
-
-			//			SORA_CLIENT_INFO("================= FRAME DEBUG PRINT =================");
-			//			SORA_CLIENT_INFO("Camera Pos: ({}, {}, {})", Camera->GetPosition().x, Camera->GetPosition().y, Camera->GetPosition().z);
-
-			//			// Log ViewProjection Matrix Rows
-			//			SORA_CLIENT_INFO("VP Matrix Row 0: [{:.2f}, {:.2f}, {:.2f}, {:.2f}]", VP[0][0], VP[1][0], VP[2][0], VP[3][0]);
-			//			SORA_CLIENT_INFO("VP Matrix Row 1: [{:.2f}, {:.2f}, {:.2f}, {:.2f}]", VP[0][1], VP[1][1], VP[2][1], VP[3][1]);
-			//			SORA_CLIENT_INFO("VP Matrix Row 2: [{:.2f}, {:.2f}, {:.2f}, {:.2f}]", VP[0][2], VP[1][2], VP[2][2], VP[3][2]);
-			//			SORA_CLIENT_INFO("VP Matrix Row 3: [{:.2f}, {:.2f}, {:.2f}, {:.2f}]", VP[0][3], VP[1][3], VP[2][3], VP[3][3]);
-
-			//			for (size_t i = 0; i < 3; ++i) { // Print first 3 vertices
-			//				glm::vec4 LocalPos = glm::vec4(g_CubeVertices[i].Position, 1.0f);
-			//				glm::vec4 ClipPos = VP * LocalPos;
-
-			//				SORA_CLIENT_INFO("Vertex [{}] In Pos: ({:.2f}, {:.2f}, {:.2f})", i, LocalPos.x, LocalPos.y, LocalPos.z);
-			//				SORA_CLIENT_INFO("  -> Clip Pos (x, y, z, w): ({:.2f}, {:.2f}, {:.2f}, {:.2f})", ClipPos.x, ClipPos.y, ClipPos.z, ClipPos.w);
-
-			//				if (ClipPos.w != 0.0f) {
-			//					glm::vec3 NDC = glm::vec3(ClipPos) / ClipPos.w;
-			//					SORA_CLIENT_INFO("  -> NDC Pos (x, y, z): ({:.2f}, {:.2f}, {:.2f})", NDC.x, NDC.y, NDC.z);
-			//				} else {
-			//					SORA_CLIENT_ERROR("  -> Clip.w is ZERO! Division by zero imminent.");
-			//				}
-			//			}
-			//			SORA_CLIENT_INFO("====================================================");
-			//		}
-			//	}
-			//}
-
             if (pRenderingSubsystem && pRenderingSubsystem->GetCameraUBO()) {
 				CmdList->BindUniformBuffer(0, 0, pRenderingSubsystem->GetCameraUBO()); 
 			}
@@ -320,6 +282,7 @@ namespace Sora
 
         virtual void OnEvent(SECI::SECIEvent& InEvent) override {
             // Catch sandbox events here
+            SECI::SECIEventHandler Dispatcher(InEvent);
         }
 
         virtual SECI::SECIEventCategory GetSubscribedEventCategories() const override {
@@ -333,6 +296,8 @@ namespace Sora
         std::shared_ptr<RHI::RHIDevice> Device{ nullptr };
         std::shared_ptr<SlangSubsystem> pSlangSubsystem{ nullptr };
         std::shared_ptr<RenderingSubsystem> pRenderingSubsystem{ nullptr };
+        std::shared_ptr<InputSubsystem> pInputSubsystem{ nullptr };
+        std::shared_ptr<WindowSubsystem> pWindowSubsystem{ nullptr };
 
         std::shared_ptr<RHI::RHIGraphicsPipeline> Pipeline{ nullptr };
         std::shared_ptr<RHI::RHIBuffer> VertexBuffer{ nullptr };
@@ -343,8 +308,8 @@ SandboxApplication::SandboxApplication() {}
 
 SandboxApplication::~SandboxApplication() {}
 
-void SandboxApplication::OnRegisterSubsystems(Sora::SECI::SECISubsystemRegistry& InRegistry, std::shared_ptr<Sora::RHI::RHIDevice> InDevice, std::shared_ptr<Sora::SlangSubsystem> InSlangSubsystem, std::shared_ptr<Sora::RenderingSubsystem> InRenderingSubsystem) {
-    InRegistry.RegisterSubsystem<Sora::SandboxSubsystem>(InDevice, InSlangSubsystem, InRenderingSubsystem);
+void SandboxApplication::OnRegisterSubsystems(Sora::SECI::SECISubsystemRegistry& InRegistry, std::shared_ptr<Sora::RHI::RHIDevice> InDevice, std::shared_ptr<Sora::SlangSubsystem> InSlangSubsystem, std::shared_ptr<Sora::RenderingSubsystem> InRenderingSubsystem, std::shared_ptr<Sora::InputSubsystem> InInputSubsystem, std::shared_ptr<Sora::WindowSubsystem> InWindowSubsystem) {
+    InRegistry.RegisterSubsystem<Sora::SandboxSubsystem>(InDevice, InSlangSubsystem, InRenderingSubsystem, InInputSubsystem, InWindowSubsystem);
 }
 
 Sora::Application* Sora::CreateApplication() {

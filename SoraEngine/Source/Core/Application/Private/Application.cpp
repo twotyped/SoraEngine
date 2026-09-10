@@ -4,8 +4,6 @@
 #include "Core/Window/WindowSubsystem.h"
 #include "Runtime/RHI/Public/Vulkan/VulkanDevice.h"
 
-
-
 namespace Sora
 {
 
@@ -18,6 +16,7 @@ namespace Sora
 		pWinSubsystem = Registry.RegisterSubsystem<WindowSubsystem>(EventBus.get(), WindowProperties("SoraEngine: RuntimeSandbox", 1280, 720));
 		pVfsSubsystem = Registry.RegisterSubsystem<VFSSubsystem>();
 		pSlangSubsystem = Registry.RegisterSubsystem<SlangSubsystem>(EventBus.get(), pVfsSubsystem, ShaderTargetAPI::SPIRV);
+		pInputSubsystem = Registry.RegisterSubsystem<InputSubsystem>(EventBus.get());
 		
 		if (pWinSubsystem && !Registry.InitializeSubsystem(pWinSubsystem.get())) {
 			SORA_ENGINE_ERROR("Failed to initialize WindowSubsystem!");
@@ -41,7 +40,7 @@ namespace Sora
 		
 		pRenderingSubsystem = Registry.RegisterSubsystem<RenderingSubsystem>(EventBus.get(), pRhiSubsystem->GetDevice(), std::move(Camera));
 
-		OnRegisterSubsystems(Registry, pRhiSubsystem->GetDevice(), pSlangSubsystem, pRenderingSubsystem);
+		OnRegisterSubsystems(Registry, pRhiSubsystem->GetDevice(), pSlangSubsystem, pRenderingSubsystem, pInputSubsystem, pWinSubsystem);
 
 		return Registry.InitializeAll();
 	}
