@@ -36,6 +36,7 @@ namespace Sora
 		}
 
 		Rendering::CameraDesc CameraDesc{};
+		CameraDesc.FOV = 70;
 		std::unique_ptr<Rendering::Camera> Camera = std::make_unique<Rendering::Camera>(CameraDesc);
 		
 		pRenderingSubsystem = Registry.RegisterSubsystem<RenderingSubsystem>(EventBus.get(), pRhiSubsystem->GetDevice(), std::move(Camera));

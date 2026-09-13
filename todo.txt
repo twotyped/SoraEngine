@@ -1,12 +1,11 @@
 x Implement a basic Virtual File System (VFS)
 x Update the Depth Stencil in the Pipeline
 x Create a Rendering subsystem with at least simple Camera
-Create a basic high-level Input subsystem.
-In the SandboxRuntime, use the Input subsystem to move the camera using WASD and mouse.
+x Create a basic high-level Input subsystem.
+x In the SandboxRuntime, use the Input subsystem to move the camera using WASD and mouse.
 Implement a basic Entity and Scene Graph system within the Rendering Subsystem.
 
 Unordered Blocks
-1. Slang Native Shader Compilation & VFS Integration
-2. Textures, Models, and the World Graph
-3. The Global Audio Output System
-4. The Sora Engine Editor Application
+1. Textures, Models, and the World Graph
+2. The Global Audio Output System
+3. The Sora Engine Editor Application
